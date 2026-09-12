@@ -1,0 +1,1883 @@
+```html
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>关注实验室</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Microsoft YaHei", sans-serif;
+        background: linear-gradient(135deg, #eef3f8, #dfe8f0);
+        color: #263238;
+      }
+
+      .game {
+        width: 1100px;
+        max-width: 96vw;
+        padding: 30px;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      }
+
+      h1 {
+        text-align: center;
+        margin: 0;
+        font-size: 36px;
+      }
+
+      .subtitle {
+        text-align: center;
+        margin: 7px 0 25px;
+        color: #78909c;
+      }
+
+      /* =====================================================
+   第一行：当前LT7 + 最近数据
+   使用 .grid-2x2 强制 2x2 布局，
+   下面这段 .top-area 留着方便回退。
+===================================================== */
+
+      /*
+      .top-area {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        gap: 20px;
+      }
+      */
+
+      /* 当前 LT7 */
+
+      .lt7-panel {
+        flex: 0 0 330px;
+        min-width: 330px;
+
+        padding: 22px;
+        border-radius: 22px;
+        background: #f5f7f9;
+
+        text-align: center;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .lt7-label {
+        color: #607d8b;
+        font-size: 18px;
+        margin-bottom: 5px;
+      }
+
+      #lt7Value {
+        display: inline-block;
+
+        font-size: 65px;
+        font-weight: 800;
+
+        line-height: 1.05;
+
+        padding: 10px 20px;
+
+        border-radius: 18px;
+
+        color: #263238;
+
+        transition:
+          color 0.2s,
+          background 0.25s,
+          transform 0.15s;
+      }
+
+      #lt7Value.positive {
+        color: #159447;
+      }
+
+      #lt7Value.negative {
+        color: #d93636;
+      }
+
+      #lt7Value.significant-positive {
+        color: #0b8f43;
+        background: rgba(55, 200, 105, 0.25);
+      }
+
+      #lt7Value.significant-negative {
+        color: #d62929;
+        background: rgba(240, 65, 65, 0.25);
+      }
+
+      .bounce {
+        transform: scale(1.08);
+      }
+
+      /* =====================================================
+   当前绩效
+===================================================== */
+
+      .performance-title {
+        margin-top: 8px;
+        font-size: 14px;
+        color: #90a4ae;
+      }
+
+      #performance {
+        margin-top: 3px;
+
+        font-size: 30px;
+        font-weight: 800;
+
+        display: inline-block;
+
+        padding: 4px 16px;
+        border-radius: 12px;
+
+        transition:
+          background 0.2s,
+          color 0.2s,
+          transform 0.2s;
+      }
+
+      /* M系列：淡蓝色 */
+
+      .performance-m {
+        color: #6f9db7;
+        background: #e2f1f8;
+      }
+
+      /* m- */
+
+      .performance-mminus {
+        color: #6f9db7;
+        background: #e2f1f8;
+      }
+
+      /* i：白色 */
+
+      .performance-i {
+        color: #b0b5bb;
+
+        background: #ffffff;
+        border: 1px solid #e4e9ed;
+      }
+
+      /* E：淡黄色 */
+
+      .performance-e {
+        color: #9a7b25;
+        background: #fff2c7;
+      }
+
+      /* =====================================================
+   最近数据看板
+===================================================== */
+
+      .history-panel {
+        flex: 1 1 auto;
+        min-width: 0;
+
+        padding: 18px;
+
+        border-radius: 22px;
+        background: #f5f7f9;
+      }
+
+      .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 9px;
+      }
+
+      .history-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #546e7a;
+      }
+
+      /* 7 / 30切换 */
+
+      .window-switch {
+        display: flex;
+        gap: 5px;
+      }
+
+      .window-btn {
+        border: none;
+
+        padding: 5px 12px;
+
+        border-radius: 10px;
+
+        font-size: 12px;
+        font-weight: bold;
+
+        color: #78909c;
+        background: #e8edf0;
+
+        cursor: pointer;
+      }
+
+      .window-btn.active {
+        color: white;
+        background: #78909c;
+      }
+
+      /* 图表 */
+
+      .chart {
+        position: relative;
+
+        width: 100%;
+        height: 205px;
+
+        background: white;
+
+        border-radius: 14px;
+
+        overflow: hidden;
+      }
+
+      .chart svg {
+        width: 100%;
+        height: 100%;
+
+        display: block;
+      }
+
+      /* =====================================================
+   主体：程序员 + 操作按钮
+   使用 .grid-2x2 强制 2x2 布局，
+   下面这段 .main 留着方便回退。
+===================================================== */
+
+      /*
+      .main {
+        width: 100%;
+
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+
+        justify-content: center;
+        align-items: center;
+
+        gap: 55px;
+
+        margin-top: 28px;
+      }
+      */      /* =====================================================
+   女程序员
+===================================================== */
+
+      .character-area {
+        flex: 0 0 320px;
+        width: 320px;
+
+        text-align: center;
+      }
+
+      .character {
+        position: relative;
+
+        width: 220px;
+        height: 280px;
+
+        margin: auto;
+      }
+
+      /* 半圆短发 */
+
+      .hair {
+        position: absolute;
+
+        width: 150px;
+        height: 115px;
+
+        background: #25252b;
+
+        border-radius: 75px 75px 35px 35px;
+
+        top: 15px;
+        left: 35px;
+
+        z-index: 3;
+      }
+
+      /* 两侧短发 */
+
+      .hair::before {
+        content: "";
+
+        position: absolute;
+
+        width: 28px;
+        height: 55px;
+
+        background: #25252b;
+
+        left: -3px;
+        bottom: 0;
+
+        border-radius: 0 0 20px 20px;
+      }
+
+      .hair::after {
+        content: "";
+
+        position: absolute;
+
+        width: 28px;
+        height: 55px;
+
+        background: #25252b;
+
+        right: -3px;
+        bottom: 0;
+
+        border-radius: 0 0 20px 20px;
+      }
+
+      /* 脸 */
+
+      .face {
+        position: absolute;
+
+        width: 112px;
+        height: 125px;
+
+        background: #ffd6bd;
+
+        border-radius: 48% 48% 45% 45%;
+
+        top: 55px;
+        left: 54px;
+
+        z-index: 4;
+      }
+
+      /* 眼睛 */
+
+      .eye {
+        position: absolute;
+
+        width: 10px;
+        height: 10px;
+
+        background: #333;
+
+        border-radius: 50%;
+
+        top: 55px;
+      }
+
+      .eye.left {
+        left: 30px;
+      }
+
+      .eye.right {
+        right: 30px;
+      }
+
+      /* 默认嘴巴 */
+
+      .mouth {
+        position: absolute;
+
+        width: 36px;
+        height: 15px;
+
+        left: 38px;
+        top: 83px;
+
+        border-bottom: 3px solid #a34c4c;
+
+        border-radius: 0 0 50% 50%;
+
+        transition: all 0.25s ease;
+      }
+
+      /* 开心嘴巴 */
+
+      .character.happy .mouth {
+        width: 38px;
+        height: 20px;
+
+        border-bottom: 4px solid #a34c4c;
+
+        border-radius: 0 0 50% 50%;
+      }
+
+      /* 不开心：嘴角向下 */
+
+      .character.sad .mouth {
+        width: 38px;
+        height: 20px;
+
+        top: 91px;
+
+        border-top: 4px solid #a34c4c;
+
+        border-bottom: none;
+
+        border-radius: 50% 50% 0 0;
+      }
+
+      /* 身体 */
+
+      .body {
+        position: absolute;
+
+        width: 155px;
+        height: 125px;
+
+        background: #6b8fd6;
+
+        border-radius: 35px 35px 25px 25px;
+
+        top: 165px;
+        left: 33px;
+
+        z-index: 2;
+      }
+
+      /* 微胖 */
+
+      .body::before {
+        content: "";
+
+        position: absolute;
+
+        width: 175px;
+        height: 120px;
+
+        background: #6b8fd6;
+
+        border-radius: 50%;
+
+        left: -10px;
+        top: 5px;
+
+        z-index: -1;
+      }
+
+      /* 笔记本 */
+
+      .laptop {
+        position: absolute;
+
+        width: 105px;
+        height: 62px;
+
+        background: #37474f;
+
+        border-radius: 8px;
+
+        bottom: 0;
+        left: 58px;
+
+        z-index: 6;
+
+        transform: perspective(150px) rotateX(-12deg);
+      }
+
+      .laptop::before {
+        content: "010101";
+
+        color: #8ff0a4;
+
+        font-family: monospace;
+
+        font-size: 11px;
+
+        position: absolute;
+
+        top: 15px;
+        left: 12px;
+      }
+
+      /* =====================================================
+   对话框
+===================================================== */
+
+      .speech {
+        min-height: 48px;
+
+        margin-top: 8px;
+
+        padding: 11px 20px;
+
+        display: inline-block;
+
+        border-radius: 18px;
+
+        background: #fff3cd;
+
+        color: #654c00;
+
+        font-size: 19px;
+        font-weight: bold;
+
+        opacity: 0;
+
+        transform: translateY(8px);
+
+        transition:
+          opacity 0.25s,
+          transform 0.25s;
+      }
+
+      .speech.show {
+        opacity: 1;
+
+        transform: translateY(0);
+      }
+
+      /* =====================================================
+   操作按钮
+===================================================== */
+
+      .controls {
+        flex: 0 0 250px;
+
+        width: 250px;
+
+        display: flex;
+        flex-direction: column;
+
+        gap: 15px;
+      }
+
+      button.control-button {
+        border: none;
+
+        border-radius: 18px;
+
+        padding: 19px;
+
+        font-size: 22px;
+        font-weight: bold;
+
+        cursor: pointer;
+
+        transition:
+          transform 0.12s,
+          box-shadow 0.12s;
+      }
+
+      button.control-button:hover {
+        transform: translateY(-2px);
+      }
+
+      button.control-button:active {
+        transform: scale(0.96);
+      }
+
+      .plus {
+        background: #d9f7e4;
+        color: #087f3d;
+      }
+
+      .minus {
+        background: #ffe0e0;
+        color: #c62828;
+      }
+
+      .reset {
+        background: #eceff1;
+        color: #546e7a;
+
+        font-size: 16px !important;
+        padding: 13px !important;
+      }
+
+      /* =====================================================
+   强制 2x2 布局
+===================================================== */
+
+      .grid-2x2 {
+        display: grid;
+
+        grid-template-columns: 330px 1fr;
+        grid-template-rows: auto auto;
+
+        gap: 20px;
+
+        margin-top: 28px;
+      }
+
+      .grid-cell {
+        display: flex;
+        flex-direction: column;
+
+        min-width: 0;
+      }
+
+      /*
+   单元格内的面板，
+   必须 width: 100%，
+   否则会撑破单元格。
+*/
+
+      .grid-cell > .lt7-panel,
+      .grid-cell > .history-panel,
+      .grid-cell > .character-area,
+      .grid-cell > .controls {
+        width: 100%;
+      }
+
+      /*
+   第二行单元格：
+   操作用栅格居中，
+   让按钮不会因为列宽变大而跑偏。
+*/
+
+      .grid-cell.controls-cell {
+        justify-content: center;
+        align-items: stretch;
+      }
+
+      .grid-cell.controls-cell .controls {
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+      }
+
+      .grid-cell.character-cell {
+        align-items: center;
+      }
+
+      .grid-cell.character-cell .character-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* =====================================================
+   底部
+===================================================== */
+
+      .hint {
+        margin-top: 17px;
+
+        text-align: center;
+
+        color: #90a4ae;
+
+        font-size: 13px;
+      }
+
+      /* =====================================================
+   小屏幕
+===================================================== */
+
+      @media (max-width: 850px) {
+        /*
+       在手机上才允许垂直排列，
+       防止桌面布局被压得太难看。
+    */
+
+        .grid-2x2 {
+          grid-template-columns: 1fr;
+        }
+
+        .lt7-panel,
+        .character-area,
+        .controls {
+          flex-basis: auto;
+          width: 100%;
+          min-width: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="game">
+      <h1>关注实验室</h1>
+
+      <div class="subtitle">观察 LT7 变化，看看女程序员赞不赞</div>
+
+      <!-- =================================================
+         强制 2x2 布局
+         LT7 | 最近数据
+         程序员 | 操作按钮
+    ================================================= -->
+
+      <div class="grid-2x2">
+        <!-- 当前 LT7 -->
+
+        <div class="grid-cell lt7-cell">
+          <div class="lt7-panel">
+            <div class="lt7-label">当前 LT7</div>
+
+            <div id="lt7Value">0.0%</div>
+
+            <div class="performance-title">当前绩效</div>
+
+            <div id="performance" class="performance-m">M</div>
+          </div>
+        </div>
+
+        <!-- 最近数据 -->
+
+        <div class="grid-cell history-cell">
+          <div class="history-panel">
+            <div class="history-header">
+              <div class="history-title">
+                最近 <span id="windowTitle">7</span> 个数据点
+              </div>
+
+              <div class="window-switch">
+                <button
+                  id="btn7"
+                  class="window-btn active"
+                  onclick="setWindow(7)"
+                >
+                  7
+                </button>
+
+                <button id="btn30" class="window-btn" onclick="setWindow(30)">
+                  30
+                </button>
+              </div>
+            </div>
+
+            <div class="chart">
+              <svg
+                id="historyChart"
+                viewBox="0 0 700 205"
+                preserveAspectRatio="none"
+              ></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 程序员 -->
+
+        <div class="grid-cell character-cell">
+          <div class="character-area">
+            <div id="character" class="character">
+              <div class="hair"></div>
+
+              <div class="face">
+                <div class="eye left"></div>
+
+                <div class="eye right"></div>
+
+                <div class="mouth"></div>
+              </div>
+
+              <div class="body"></div>
+
+              <div class="laptop"></div>
+            </div>
+
+            <div id="speech" class="speech">嗯嗯赞赞！</div>
+          </div>
+        </div>
+
+        <!-- 操作按钮 -->
+
+        <div class="grid-cell controls-cell">
+          <div class="controls">
+            <button class="control-button plus" onclick="changeLT7(0.1)">
+              ＋ 0.1%
+            </button>
+
+            <button class="control-button minus" onclick="changeLT7(-0.1)">
+              － 0.1%
+            </button>
+
+            <button class="control-button reset" onclick="resetLT7()">
+              重置为 0
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint">纵轴范围 −0.9% ～ +0.9%，超过 ±0.3% 进入显著状态</div>
+    </div>
+
+    <script>
+      /* =====================================================
+   数据
+===================================================== */
+
+      let lt7 = 0;
+
+      /*
+   历史数据。
+   为了让7/30切换以后有数据，
+   实际历史记录不限长度。
+
+   图表只显示最近7或30个。
+*/
+      let history = [0];
+
+      /*
+   当前窗口
+*/
+      let windowSize = 7;
+
+      /* DOM */
+
+      const valueElement = document.getElementById("lt7Value");
+
+      const performanceElement = document.getElementById("performance");
+
+      const speechElement = document.getElementById("speech");
+
+      const characterElement = document.getElementById("character");
+
+      const chartElement = document.getElementById("historyChart");
+
+      const windowTitle = document.getElementById("windowTitle");
+
+      const btn7 = document.getElementById("btn7");
+
+      const btn30 = document.getElementById("btn30");
+
+      /* =====================================================
+   改变 LT7
+===================================================== */
+
+      function changeLT7(amount) {
+        lt7 += amount;
+
+        /*
+       消除 JS 浮点误差
+    */
+
+        lt7 = Math.round(lt7 * 10) / 10;
+
+        /*
+       加入历史
+    */
+
+        history.push(lt7);
+
+        updateUI();
+
+        updateHistoryChart();
+      }
+
+      /* =====================================================
+   切换 7 / 30
+===================================================== */
+
+      function setWindow(size) {
+        windowSize = size;
+
+        windowTitle.textContent = size;
+
+        btn7.classList.toggle("active", size === 7);
+
+        btn30.classList.toggle("active", size === 30);
+
+        updateHistoryChart();
+      }
+
+      /* =====================================================
+   当前绩效
+===================================================== */
+
+      function updatePerformance() {
+        let text;
+        let className;
+
+        /*
+       E：
+       > +0.6
+       （已经从 > +0.9 下移到 > +0.6，
+       把原本的 m / M+ 区间都包进来）
+    */
+
+        if (lt7 > 0.6) {
+          text = "E";
+
+          className = "performance-e";
+        } else if (lt7 >= 0) {
+          /*
+       M：
+       0 ~ +0.6
+       （原本 M 是 0~0.3，M+ 是 0.3~0.6，
+       合并之后统一用 M）
+    */
+          text = "M";
+
+          className = "performance-m";
+        } else if (lt7 >= -0.3) {
+          /*
+       M-：
+       -0.3 ~ 0
+    */
+          text = "M-";
+
+          className = "performance-mminus";
+        } else {
+          /*
+       i：
+       < -0.3
+    */
+          text = "i";
+
+          className = "performance-i";
+        }
+
+        performanceElement.textContent = text;
+
+        performanceElement.className = className;
+      }
+
+      /* =====================================================
+   主UI
+===================================================== */
+
+      function updateUI() {
+        valueElement.className = "";
+
+        const prefix = lt7 > 0 ? "+" : "";
+
+        valueElement.textContent = prefix + lt7.toFixed(1) + "%";
+
+        /*
+       普通颜色
+    */
+
+        if (lt7 > 0) {
+          valueElement.classList.add("positive");
+        } else if (lt7 < 0) {
+          valueElement.classList.add("negative");
+        }
+
+        /*
+       显著
+    */
+
+        if (Math.abs(lt7) > 0.3) {
+          if (lt7 > 0) {
+            valueElement.className = "significant-positive";
+
+            showSpeech("嗯嗯赞赞！");
+
+            characterElement.classList.add("happy");
+
+            characterElement.classList.remove("sad");
+
+            speakFemale("嗯嗯赞赞！");
+          } else {
+            valueElement.className = "significant-negative";
+
+            showSpeech("嗯嗯不赞赞！");
+
+            characterElement.classList.add("sad");
+
+            characterElement.classList.remove("happy");
+
+            speakFemale("嗯嗯不赞赞！");
+          }
+        } else {
+          hideSpeech();
+
+          characterElement.classList.remove("happy");
+
+          characterElement.classList.remove("sad");
+        }
+
+        /*
+       更新绩效
+    */
+
+        updatePerformance();
+
+        /*
+       弹跳
+    */
+
+        valueElement.classList.add("bounce");
+
+        setTimeout(() => {
+          valueElement.classList.remove("bounce");
+        }, 150);
+      }
+
+      /* =====================================================
+   对话框
+===================================================== */
+
+      function showSpeech(text) {
+        speechElement.textContent = text;
+
+        speechElement.classList.remove("show");
+
+        void speechElement.offsetWidth;
+
+        speechElement.classList.add("show");
+      }
+
+      function hideSpeech() {
+        speechElement.classList.remove("show");
+      }
+
+      /* =====================================================
+   女性中文语音
+===================================================== */
+
+      /*
+   用于匹配 voice 名称时：
+   - 转义 regex 特殊字符
+   - 用 ASCII 字母 / 数字做边界，
+     避免 Female 被 Male 误匹配。
+*/
+
+      const escapeRegex = (s) =>
+        s.replace(/[.*+?^${}()|[\]\\/^$]/g, "\\$&");
+
+      const matchKeyword = (name, kw) => {
+        if (!name) return false;
+
+        const target = kw.toLowerCase();
+        const pattern = `(^|[^a-z0-9])${escapeRegex(target)}([^a-z0-9]|$)`;
+
+        return new RegExp(pattern, "i").test(name);
+      };
+
+      const matchAny = (name, list) =>
+        list.some((kw) => matchKeyword(name, kw));
+
+      const isChineseVoice = (v) =>
+        /zh|chinese|mandarin/i.test(v.lang) ||
+        /chinese|中文|普通话/i.test(v.name);
+
+      /*
+       缓存选好的女声。
+       第一次播放后才落地，
+       用户点击时如果还没拿到，
+       speakFemale 会现场挑一个。
+    */
+
+      let cachedFemaleVoice = null;
+
+      function pickFemaleVoice() {
+        const voices = speechSynthesis.getVoices();
+
+        if (!voices.length) return null;
+
+        /*
+       已知女声关键词。
+       包括 Edge / Microsoft 云端女声，
+       macOS 系统婷婷 / 美娟 / 慧慧等。
+    */
+
+        const femaleKeywords = [
+          "Xiaoxiao", "XiaoXiao", "晓晓",
+          "Xiaoyi", "晓伊",
+          "Xiaomeng", "晓梦",
+          "Xiaohan", "晓涵",
+          "Xiaorui", "晓睿",
+          "Xiaoxuan", "晓萱",
+          "Yating", "雅婷",
+          "Tingting", "婷婷",
+          "Sin-ji", "Sinji",
+          "Mei", "Meijuan", "娟",
+          "Hanhan", "汉汉",
+          "Zhiyu", "知语",
+          "Huihui", "慧慧",
+          "Female", "Woman", "Girl", "Feminine",
+          "女声", "女生", "女性",
+        ];
+
+        /*
+       男声关键词。
+       注意：边界匹配解决 Female / Male 误伤。
+    */
+
+        const maleKeywords = [
+          "Yunyang", "云扬",
+          "Kangkang", "康康",
+          "Yunxi", "云希",
+          "Yunjian", "云健",
+          "男声", "男生", "男性",
+        ];
+
+        /*
+       第一优先级：
+       中文 + 已知女声
+    */
+
+        let voice = voices.find(
+          (v) => isChineseVoice(v) && matchAny(v.name, femaleKeywords),
+        );
+
+        /*
+       第二优先级：
+       任意已知女声
+    */
+
+        if (!voice) {
+          voice = voices.find((v) =>
+            matchAny(v.name, femaleKeywords),
+          );
+        }
+
+        /*
+       第三优先级：
+       中文且不是已知男声
+    */
+
+        if (!voice) {
+          voice = voices.find(
+            (v) =>
+              isChineseVoice(v) &&
+              !matchAny(v.name, maleKeywords),
+          );
+        }
+
+        /*
+       第四优先级：
+       只要是中文就直接用
+    */
+
+        if (!voice) {
+          voice = voices.find(isChineseVoice);
+        }
+
+        /*
+       第五优先级：
+       任意 voice，排除已知男声
+    */
+
+        if (!voice) {
+          voice = voices.find(
+            (v) => !matchAny(v.name, maleKeywords),
+          );
+        }
+
+        return voice || null;
+      }
+
+      function speakFemale(text) {
+        if (!("speechSynthesis" in window)) {
+          return;
+        }
+
+        const play = () => {
+          speechSynthesis.cancel();
+
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = "zh-CN";
+
+          let voice = cachedFemaleVoice;
+
+          /*
+         voice 对象会过期，
+         每次重新校验 voiceURI 是否还在。
+      */
+
+          if (voice) {
+            const alive = speechSynthesis
+              .getVoices()
+              .find((v) => v.voiceURI === voice.voiceURI);
+
+            if (!alive) voice = null;
+          }
+
+          if (!voice) {
+            voice = pickFemaleVoice();
+            cachedFemaleVoice = voice;
+          }
+
+          if (voice) {
+            utterance.voice = voice;
+          }
+
+          /*
+         女性声音参数：
+         pitch 1.25 是安全区间，
+         既偏女声、又不会让某些 voice 静默。
+      */
+
+          utterance.pitch = 1.25;
+
+          utterance.rate = 1.0;
+
+          utterance.volume = 1;
+
+          speechSynthesis.speak(utterance);
+        };
+
+        /*
+       如果 voice 列表还没就绪，
+       等到就绪再播放，
+       避免第一次 click 出现无声。
+    */
+
+        if (speechSynthesis.getVoices().length > 0) {
+          play();
+          return;
+        }
+
+        let played = false;
+
+        const onReady = () => {
+          if (played) return;
+
+          played = true;
+          speechSynthesis.removeEventListener(
+            "voiceschanged",
+            onReady,
+          );
+          play();
+        };
+
+        speechSynthesis.addEventListener("voiceschanged", onReady);
+
+        /*
+       兜底：
+       500ms 后再试一次，
+       防止 voiceschanged 事件不触发。
+    */
+
+        setTimeout(() => {
+          if (played) return;
+
+          if (speechSynthesis.getVoices().length > 0) {
+            played = true;
+            speechSynthesis.removeEventListener(
+              "voiceschanged",
+              onReady,
+            );
+            play();
+          }
+        }, 500);
+      }
+
+      /*
+   初始化时主动预热一次女声 cache。
+*/
+
+      function warmFemaleVoiceCache() {
+        const v = pickFemaleVoice();
+
+        if (v) cachedFemaleVoice = v;
+      }
+
+      if ("speechSynthesis" in window) {
+        warmFemaleVoiceCache();
+
+        speechSynthesis.addEventListener("voiceschanged", () => {
+          warmFemaleVoiceCache();
+        });
+
+        /*
+       多刷几次，应对懒加载。
+    */
+
+        setTimeout(warmFemaleVoiceCache, 200);
+        setTimeout(warmFemaleVoiceCache, 800);
+      }
+
+      /* =====================================================
+   历史图表
+===================================================== */
+
+      function updateHistoryChart() {
+        chartElement.innerHTML = "";
+
+        /*
+       SVG尺寸
+    */
+
+        const W = 700;
+        const H = 205;
+
+        /*
+       图表边距
+    */
+
+        const left = 55;
+        const right = 18;
+
+        const top = 13;
+        const bottom = 27;
+
+        const chartWidth = W - left - right;
+
+        const chartHeight = H - top - bottom;
+
+        /*
+       固定纵轴：
+       -0.9 ~ +0.9
+    */
+
+        const minY = -0.9;
+        const maxY = 0.9;
+
+        function valueToY(value) {
+          const clipped = Math.max(minY, Math.min(maxY, value));
+
+          return top + ((maxY - clipped) / (maxY - minY)) * chartHeight;
+        }
+
+        /*
+       获取当前窗口数据，
+       并预先计算 X / Y 坐标
+    */
+
+        const visibleData = history.slice(-windowSize);
+        const count = visibleData.length;
+
+        const points = visibleData.map((value, index) => {
+          let x;
+
+          if (count === 1) {
+            x = left + chartWidth / 2;
+          } else {
+            x = left + (index / (count - 1)) * chartWidth;
+          }
+
+          return {
+            x,
+            y: valueToY(value),
+            value,
+          };
+        });
+
+        /*
+       决定视觉色彩：
+       - 不看整体趋势
+       - 上方（> 0）用绿色
+       - 下方（< 0）用红色
+       - 主线也按 0 轴拆成两段着色，
+         颜色语义和面积完全一致
+    */
+
+        const POSITIVE_COLOR = "#22a653";
+        const NEGATIVE_COLOR = "#df3b3b";
+
+        const baseY = valueToY(0);
+
+        /*
+       ====================================================
+       1. SVG <defs>：
+       两套面积渐变 + 上 / 下 clipPath + 主线发光
+    ====================================================
+    */
+
+        const NS = "http://www.w3.org/2000/svg";
+
+        const defs = document.createElementNS(NS, "defs");
+
+        /*
+       上方（>= 0）面积渐变：
+       从顶到底由浓到淡
+    */
+
+        const gradientAbove = document.createElementNS(
+          NS,
+          "linearGradient",
+        );
+        gradientAbove.setAttribute("id", "areaAbove");
+        gradientAbove.setAttribute("gradientUnits", "userSpaceOnUse");
+        gradientAbove.setAttribute("x1", "0");
+        gradientAbove.setAttribute("y1", "0");
+        gradientAbove.setAttribute("x2", "0");
+        gradientAbove.setAttribute("y2", baseY.toFixed(2));
+
+        const aboveStopTop = document.createElementNS(NS, "stop");
+        aboveStopTop.setAttribute("offset", "0%");
+        aboveStopTop.setAttribute("stop-color", POSITIVE_COLOR);
+        aboveStopTop.setAttribute("stop-opacity", "0.32");
+
+        const aboveStopBottom = document.createElementNS(NS, "stop");
+        aboveStopBottom.setAttribute("offset", "100%");
+        aboveStopBottom.setAttribute("stop-color", POSITIVE_COLOR);
+        aboveStopBottom.setAttribute("stop-opacity", "0.04");
+
+        gradientAbove.appendChild(aboveStopTop);
+        gradientAbove.appendChild(aboveStopBottom);
+
+        defs.appendChild(gradientAbove);
+
+        /*
+       下方（<= 0）面积渐变：
+       从顶到底由淡到浓
+    */
+
+        const gradientBelow = document.createElementNS(
+          NS,
+          "linearGradient",
+        );
+        gradientBelow.setAttribute("id", "areaBelow");
+        gradientBelow.setAttribute("gradientUnits", "userSpaceOnUse");
+        gradientBelow.setAttribute("x1", "0");
+        gradientBelow.setAttribute("y1", baseY.toFixed(2));
+        gradientBelow.setAttribute("x2", "0");
+        gradientBelow.setAttribute("y2", H.toFixed(2));
+
+        const belowStopTop = document.createElementNS(NS, "stop");
+        belowStopTop.setAttribute("offset", "0%");
+        belowStopTop.setAttribute("stop-color", NEGATIVE_COLOR);
+        belowStopTop.setAttribute("stop-opacity", "0.04");
+
+        const belowStopBottom = document.createElementNS(NS, "stop");
+        belowStopBottom.setAttribute("offset", "100%");
+        belowStopBottom.setAttribute("stop-color", NEGATIVE_COLOR);
+        belowStopBottom.setAttribute("stop-opacity", "0.34");
+
+        gradientBelow.appendChild(belowStopTop);
+        gradientBelow.appendChild(belowStopBottom);
+
+        defs.appendChild(gradientBelow);
+
+        /*
+       上方 clipPath：y = 0 ~ baseY
+    */
+
+        const clipAbove = document.createElementNS(NS, "clipPath");
+        clipAbove.setAttribute("id", "clipAboveZero");
+
+        const clipAboveRect = document.createElementNS(NS, "rect");
+        clipAboveRect.setAttribute("x", 0);
+        clipAboveRect.setAttribute("y", 0);
+        clipAboveRect.setAttribute("width", W);
+        clipAboveRect.setAttribute("height", baseY);
+
+        clipAbove.appendChild(clipAboveRect);
+        defs.appendChild(clipAbove);
+
+        /*
+       下方 clipPath：y = baseY ~ H
+    */
+
+        const clipBelow = document.createElementNS(NS, "clipPath");
+        clipBelow.setAttribute("id", "clipBelowZero");
+
+        const clipBelowRect = document.createElementNS(NS, "rect");
+        clipBelowRect.setAttribute("x", 0);
+        clipBelowRect.setAttribute("y", baseY);
+        clipBelowRect.setAttribute("width", W);
+        clipBelowRect.setAttribute("height", H - baseY);
+
+        clipBelow.appendChild(clipBelowRect);
+        defs.appendChild(clipBelow);
+
+        /*
+       线条发光 shadow filter
+    */
+
+        const glow = document.createElementNS(NS, "filter");
+        glow.setAttribute("id", "lineGlow");
+        glow.setAttribute("x", "-10%");
+        glow.setAttribute("y", "-50%");
+        glow.setAttribute("width", "120%");
+        glow.setAttribute("height", "200%");
+
+        const feGaussian = document.createElementNS(NS, "feGaussianBlur");
+        feGaussian.setAttribute("stdDeviation", "2.2");
+        feGaussian.setAttribute("result", "blur");
+
+        const feMerge = document.createElementNS(NS, "feMerge");
+        const feMergeNode1 = document.createElementNS(NS, "feMergeNode");
+        feMergeNode1.setAttribute("in", "blur");
+        const feMergeNode2 = document.createElementNS(NS, "feMergeNode");
+        feMergeNode2.setAttribute("in", "SourceGraphic");
+        feMerge.appendChild(feMergeNode1);
+        feMerge.appendChild(feMergeNode2);
+
+        glow.appendChild(feGaussian);
+        glow.appendChild(feMerge);
+
+        defs.appendChild(glow);
+
+        chartElement.appendChild(defs);
+
+        /*
+       ====================================================
+       2. 网格 + Y 轴文字
+    ====================================================
+    */
+
+        const axisValues = [0.9, 0.6, 0.3, 0, -0.3, -0.6, -0.9];
+
+        axisValues.forEach((value) => {
+          const y = valueToY(value);
+
+          const line = document.createElementNS(NS, "line");
+          line.setAttribute("x1", left);
+          line.setAttribute("x2", W - right);
+          line.setAttribute("y1", y);
+          line.setAttribute("y2", y);
+
+          let labelFill = "#546e7a";
+
+          if (value === 0.3 || value === -0.3) {
+            line.setAttribute(
+              "stroke",
+              value > 0 ? POSITIVE_COLOR : NEGATIVE_COLOR,
+            );
+            line.setAttribute("stroke-width", "2");
+            line.setAttribute("stroke-dasharray", "6 5");
+            line.setAttribute("opacity", "0.55");
+
+            labelFill = value > 0 ? POSITIVE_COLOR : NEGATIVE_COLOR;
+          } else if (value === 0) {
+            line.setAttribute("stroke", "#90a4ae");
+            line.setAttribute("stroke-width", "1.5");
+
+            labelFill = "#90a4ae";
+          } else {
+            line.setAttribute("stroke", "#e8edf0");
+            line.setAttribute("stroke-width", "1");
+          }
+
+          chartElement.appendChild(line);
+
+          const text = document.createElementNS(NS, "text");
+          const prefix = value > 0 ? "+" : "";
+
+          text.textContent = prefix + value.toFixed(1) + "%";
+          text.setAttribute("x", 3);
+          text.setAttribute("y", y + 4);
+          text.setAttribute("fill", labelFill);
+
+          /*
+         显著边界用粗体，
+         和数据点标签保持一致。
+      */
+
+          if (value === 0.3 || value === -0.3) {
+            text.setAttribute("font-weight", "700");
+          }
+
+          text.setAttribute(
+            "class",
+            value === 0 ? "axis-label zero" : "axis-label",
+          );
+
+          chartElement.appendChild(text);
+        });
+
+        /*
+       ====================================================
+       3. 平滑曲线：
+       使用 Catmull-Rom 转 Bezier。
+       ====================================================
+    */
+
+        function buildSmoothPath(pts) {
+          if (pts.length < 2) return "";
+
+          let d = `M ${pts[0].x.toFixed(2)} ${pts[0].y.toFixed(2)}`;
+
+          /*
+         双端都在上界之外 / 双端都在下界之外：
+         直接走水平直线段，
+         不走 Catmull-Rom，
+         避免出现"贴着边看不见"或被裁的问题。
+      */
+
+          for (let i = 0; i < pts.length - 1; i++) {
+            const p1 = pts[i];
+            const p2 = pts[i + 1];
+
+            const v1 = p1.value;
+            const v2 = p2.value;
+
+            const bothAboveBound = v1 > maxY && v2 > maxY;
+            const bothBelowBound = v1 < minY && v2 < minY;
+
+            if (bothAboveBound) {
+              d += ` L ${p2.x.toFixed(2)} ${top}`;
+            } else if (bothBelowBound) {
+              d += ` L ${p2.x.toFixed(2)} ${(top + chartHeight).toFixed(2)}`;
+            } else if (pts.length === 2) {
+              d += ` L ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+            } else {
+              const p0 = pts[i - 1] || pts[i];
+              const p3 = pts[i + 2] || pts[i + 1];
+
+              const t = 0.22;
+              const cp1x = p1.x + (p2.x - p0.x) * t;
+              const cp1y = p1.y + (p2.y - p0.y) * t;
+              const cp2x = p2.x - (p3.x - p1.x) * t;
+              const cp2y = p2.y - (p3.y - p1.y) * t;
+
+              d += ` C ${cp1x.toFixed(2)} ${cp1y.toFixed(2)}, ${cp2x.toFixed(2)} ${cp2y.toFixed(2)}, ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+            }
+          }
+
+          return d;
+        }
+
+        /*
+       ====================================================
+       4. 面积 + 主线
+    ====================================================
+    */
+
+        if (points.length >= 2) {
+          const linePath = buildSmoothPath(points);
+
+          /*
+         面积路径：
+         沿曲线 → 底边（baseY = 0 线）→ 回到起点。
+         同一个路径会被画两遍，
+         一次 clip 到 baseY 之上（绿色），
+         一次 clip 到 baseY 之下（红色）。
+      */
+
+          const areaPath =
+            linePath +
+            ` L ${points[points.length - 1].x.toFixed(2)} ${baseY.toFixed(2)}` +
+            ` L ${points[0].x.toFixed(2)} ${baseY.toFixed(2)} Z`;
+
+          /*
+         上方面积（绿色）
+      */
+
+          const areaAbove = document.createElementNS(NS, "path");
+          areaAbove.setAttribute("d", areaPath);
+          areaAbove.setAttribute("fill", "url(#areaAbove)");
+          areaAbove.setAttribute("clip-path", "url(#clipAboveZero)");
+          chartElement.appendChild(areaAbove);
+
+          /*
+         下方面积（红色）
+      */
+
+          const areaBelow = document.createElementNS(NS, "path");
+          areaBelow.setAttribute("d", areaPath);
+          areaBelow.setAttribute("fill", "url(#areaBelow)");
+          areaBelow.setAttribute("clip-path", "url(#clipBelowZero)");
+          chartElement.appendChild(areaBelow);
+
+          /*
+         主线（按 0 轴分成两段着色）：
+         和面积完全一致：
+         - 0 上方 → 绿色
+         - 0 下方 → 红色
+         中线过渡处自然衔接。
+      */
+
+          const lineAbove = document.createElementNS(NS, "path");
+          lineAbove.setAttribute("d", linePath);
+          lineAbove.setAttribute("fill", "none");
+          lineAbove.setAttribute("stroke", POSITIVE_COLOR);
+          lineAbove.setAttribute("stroke-width", "3");
+          lineAbove.setAttribute("stroke-linecap", "round");
+          lineAbove.setAttribute("stroke-linejoin", "round");
+          lineAbove.setAttribute("filter", "url(#lineGlow)");
+          lineAbove.setAttribute("clip-path", "url(#clipAboveZero)");
+          chartElement.appendChild(lineAbove);
+
+          const lineBelow = document.createElementNS(NS, "path");
+          lineBelow.setAttribute("d", linePath);
+          lineBelow.setAttribute("fill", "none");
+          lineBelow.setAttribute("stroke", NEGATIVE_COLOR);
+          lineBelow.setAttribute("stroke-width", "3");
+          lineBelow.setAttribute("stroke-linecap", "round");
+          lineBelow.setAttribute("stroke-linejoin", "round");
+          lineBelow.setAttribute("filter", "url(#lineGlow)");
+          lineBelow.setAttribute("clip-path", "url(#clipBelowZero)");
+          chartElement.appendChild(lineBelow);
+        }
+
+        /*
+       ====================================================
+       5. 数据点 + 文字标签
+    ====================================================
+    */
+
+        points.forEach((point, index) => {
+          const value = point.value;
+
+          let dotColor = "#90a4ae";
+
+          if (value > 0) {
+            dotColor = "#22a653";
+          } else if (value < 0) {
+            dotColor = "#df3b3b";
+          }
+
+          const significant = Math.abs(value) > 0.3;
+
+          const isLast = index === points.length - 1;
+
+          /*
+         显著：发光外圈
+      */
+
+          if (significant) {
+            const outer = document.createElementNS(NS, "circle");
+            outer.setAttribute("cx", point.x);
+            outer.setAttribute("cy", point.y);
+            outer.setAttribute("r", 12);
+            outer.setAttribute(
+              "fill",
+              value > 0 ? "rgba(55,200,105,.22)" : "rgba(240,65,65,.22)",
+            );
+            chartElement.appendChild(outer);
+          }
+
+          /*
+         内圈白底，提升点视觉
+      */
+
+          const innerRing = document.createElementNS(NS, "circle");
+          innerRing.setAttribute("cx", point.x);
+          innerRing.setAttribute("cy", point.y);
+          innerRing.setAttribute("r", significant ? 5 : 4);
+          innerRing.setAttribute("fill", "#ffffff");
+          chartElement.appendChild(innerRing);
+
+          /*
+         点本身
+      */
+
+          const circle = document.createElementNS(NS, "circle");
+          circle.setAttribute("cx", point.x);
+          circle.setAttribute("cy", point.y);
+          circle.setAttribute("r", significant ? 4 : 3);
+          circle.setAttribute("fill", dotColor);
+          chartElement.appendChild(circle);
+
+          /*
+         最后一点：高亮强调，
+         用当前点的 dotColor，
+         让高亮和数据点的语义一致（绿=正、红=负）。
+      */
+
+          if (isLast && points.length > 1) {
+            const halo = document.createElementNS(NS, "circle");
+            halo.setAttribute("cx", point.x);
+            halo.setAttribute("cy", point.y);
+            halo.setAttribute("r", 8);
+            halo.setAttribute("fill", "none");
+            halo.setAttribute("stroke", dotColor);
+            halo.setAttribute("stroke-width", "2");
+            halo.setAttribute("opacity", "0.55");
+            chartElement.appendChild(halo);
+          }
+
+          /*
+         数值标签
+      */
+
+          const text = document.createElementNS(NS, "text");
+          const prefix = value > 0 ? "+" : "";
+
+          text.textContent = prefix + value.toFixed(1) + "%";
+          text.setAttribute("x", point.x);
+
+          /*
+         默认：正数 → 标签放在点上方，
+         负数 → 标签放在点下方。
+
+         但当值超出 ±0.9，
+         y 被裁到顶 / 底边时，
+         默认位置会让文字 + ascenders
+         跑出 viewBox 被 overflow:hidden 吃掉，
+         看起来像消失。
+         这时自动翻到另一边。
+      */
+
+          const nearTop = point.y <= top + 14;
+          const nearBottom = point.y >= top + chartHeight - 14;
+
+          let labelY;
+
+          if (value >= 0) {
+            labelY = point.y - 12;
+            if (nearTop) labelY = point.y + 18;
+          } else {
+            labelY = point.y + 18;
+            if (nearBottom) labelY = point.y - 12;
+          }
+
+          text.setAttribute("y", labelY);
+          text.setAttribute("text-anchor", "middle");
+          text.setAttribute("class", "point-label");
+          text.setAttribute("fill", dotColor);
+          text.setAttribute("font-weight", significant ? "700" : "500");
+
+          if (windowSize === 30) {
+            text.setAttribute("font-size", "8");
+          }
+
+          chartElement.appendChild(text);
+
+          /*
+         X 轴编号
+      */
+
+          if (
+            windowSize === 7 ||
+            index === 0 ||
+            index === count - 1 ||
+            index % 5 === 0
+          ) {
+            const indexText = document.createElementNS(NS, "text");
+            indexText.textContent = "#" + (index + 1);
+            indexText.setAttribute("x", point.x);
+            indexText.setAttribute("y", H - 8);
+            indexText.setAttribute("text-anchor", "middle");
+            indexText.setAttribute("class", "axis-label");
+            chartElement.appendChild(indexText);
+          }
+        });
+      }
+
+      /* =====================================================
+   重置
+===================================================== */
+
+      function resetLT7() {
+        lt7 = 0;
+
+        history = [0];
+
+        updateUI();
+
+        updateHistoryChart();
+
+        /*
+       reset 的时候顺手加一句语音彩蛋。
+    */
+
+        showSpeech("我前天把你实验关了");
+
+        characterElement.classList.add("sad");
+
+        characterElement.classList.remove("happy");
+
+        speakFemale("我前天把你实验关了");
+      }
+
+      /* =====================================================
+   初始化
+===================================================== */
+
+      updateUI();
+
+      updateHistoryChart();
+    </script>
+  </body>
+</html>
+```
