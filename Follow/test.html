@@ -606,16 +606,17 @@
       }
 
       /* =====================================================
-   自适应布局
-   - 不强制 2x2，何种屏幕都自然排列
-   - 每个单元格最小 330px，能并排放就并排放，
-     放不下就自动换行
+   强制 2x2 布局
+   - 两列等宽 (1fr 1fr)
+   - 两行，行高按内容自适应
 ===================================================== */
 
       .grid-2x2 {
         display: grid;
 
-        grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+        grid-template-columns: 1fr 1fr;
+
+        grid-template-rows: auto auto;
 
         gap: 20px;
 
