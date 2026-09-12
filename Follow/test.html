@@ -686,15 +686,28 @@
 
       /* =====================================================
    移动端单独设计
-   - 屏幕 ≤ 600px 时切回单列堆叠，
-     不再死压 2x2
-   - 文字防竖排
-   - 按钮变全宽、易点
+   - 屏幕 ≤ 600px 时仍然走 2x2，
+     但把面板压紧，让 4 个 tab 一屏内可见
+   - 文字防竖排（white-space: nowrap）
+   - 字号 / padding / 图表 整体按比例缩
 ===================================================== */
 
       @media (max-width: 600px) {
+        html,
         body {
-          padding: 8px;
+          height: 100%;
+        }
+
+        body {
+          padding: 0;
+
+          margin: 0;
+
+          display: flex;
+
+          align-items: stretch;
+
+          justify-content: center;
         }
 
         .game {
@@ -702,34 +715,54 @@
 
           max-width: 100%;
 
-          padding: 18px;
+          padding: 12px;
 
-          border-radius: 18px;
+          border-radius: 0;
+
+          min-height: 100vh;
+
+          min-height: 100dvh;
+
+          display: flex;
+
+          flex-direction: column;
         }
 
         h1 {
-          font-size: 22px !important;
+          font-size: 18px !important;
 
-          margin-bottom: 6px !important;
+          margin: 0 0 4px !important;
         }
 
         .subtitle {
-          font-size: 12px !important;
+          font-size: 11px !important;
+
+          margin-bottom: 8px;
         }
 
-        /* 关键：手机上回单列 */
+        /* 关键：手机也保持 2x2，挤在一屏内 */
 
         .grid-2x2 {
-          grid-template-columns: 1fr !important;
+          grid-template-columns: 1fr 1fr !important;
 
-          grid-template-rows: auto auto auto auto !important;
+          grid-template-rows: 1fr 1fr !important;
 
-          gap: 14px !important;
+          gap: 8px !important;
 
-          margin-top: 18px !important;
+          margin-top: 8px !important;
+
+          flex: 1;
+
+          min-height: 0;
         }
 
-        /* 标题不竖排 */
+        /* 每个格子占满可用高度 */
+
+        .grid-cell {
+          min-height: 0;
+        }
+
+        /* 标题 / 标签不竖排 */
 
         .history-title,
         .lt7-label,
@@ -741,55 +774,136 @@
         /* LT7 数字不被挤成竖排 */
 
         #lt7Value {
-          font-size: 38px !important;
+          font-size: 30px !important;
 
           letter-spacing: -1px;
 
           white-space: nowrap;
+
+          line-height: 1.1;
         }
 
-        /* 图表占满宽度，viewBox 自适应 */
+        /* LT7 面板紧凑 */
+
+        .lt7-panel {
+          padding: 10px !important;
+        }
+
+        .lt7-label {
+          font-size: 12px !important;
+
+          margin-bottom: 4px !important;
+        }
+
+        .performance-title {
+          font-size: 11px !important;
+
+          margin: 6px 0 4px !important;
+        }
+
+        #performance {
+          font-size: 24px !important;
+
+          padding: 4px 12px !important;
+        }
+
+        /* 历史面板紧凑 */
+
+        .history-panel {
+          padding: 10px !important;
+        }
+
+        .history-header {
+          margin-bottom: 6px !important;
+        }
+
+        .history-title {
+          font-size: 12px !important;
+        }
+
+        .window-btn {
+          padding: 3px 8px !important;
+
+          font-size: 11px !important;
+        }
+
+        /* 图表占满格子的宽和高，viewBox 等比缩放 */
 
         .chart {
-          height: 200px;
+          height: 100% !important;
+
+          flex: 1;
+
+          min-height: 0;
         }
 
-        /* 按钮全宽、方便拇指点 */
+        /* SVG 用 meet 而不是 none，
+       避免格子是竖向时被 y 方向拉变形 */
+
+        #historyChart {
+          width: 100%;
+
+          height: 100%;
+
+          display: block;
+        }
+
+        /* 角色面板紧凑 */
+
+        .character-area {
+          padding: 8px !important;
+
+          gap: 6px !important;
+        }
+
+        .character {
+          transform: scale(0.55);
+
+          transform-origin: center top;
+        }
+
+        .speech {
+          font-size: 11px !important;
+
+          padding: 6px 10px !important;
+
+          max-width: 95%;
+        }
+
+        /* 按钮两列、紧凑 */
 
         .controls {
           flex-direction: row !important;
 
           flex-wrap: wrap;
 
-          gap: 8px;
+          gap: 6px !important;
+
+          justify-content: center;
         }
 
         .control-button {
-          flex: 1 1 calc(50% - 4px);
+          flex: 1 1 calc(50% - 3px);
 
           min-width: 0;
 
-          padding: 12px 8px !important;
+          padding: 10px 4px !important;
 
-          font-size: 14px !important;
+          font-size: 12px !important;
 
           white-space: nowrap;
+
+          border-radius: 10px !important;
         }
 
-        /* 角色占中 */
+        /* 隐藏 X 轴编号里的内容，避免挤压 */
 
-        .character-area {
-          padding: 14px !important;
+        .axis-label {
+          font-size: 7px;
         }
 
-        .character {
-          transform: scale(0.85);
-        }
-
-        .speech {
-          font-size: 13px !important;
-
-          padding: 8px 14px !important;
+        .point-label {
+          font-size: 7px;
         }
       }
     </style>
