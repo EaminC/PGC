@@ -783,28 +783,38 @@
           line-height: 1.1;
         }
 
-        /* LT7 面板紧凑 */
+        /*
+       LT7 块：高度撑满 cell，内容真正居中
+    */
 
         .lt7-panel {
-          padding: 10px !important;
+          flex: 1 !important;
+
+          min-height: 0 !important;
+
+          padding: 8px !important;
+
+          align-items: center !important;
+
+          justify-content: center !important;
         }
 
         .lt7-label {
           font-size: 12px !important;
 
-          margin-bottom: 4px !important;
+          margin-bottom: 2px !important;
         }
 
         .performance-title {
           font-size: 11px !important;
 
-          margin: 6px 0 4px !important;
+          margin: 4px 0 2px !important;
         }
 
         #performance {
-          font-size: 24px !important;
+          font-size: 22px !important;
 
-          padding: 4px 12px !important;
+          padding: 3px 10px !important;
         }
 
         /* 历史面板紧凑 */
@@ -861,24 +871,49 @@
 
         /* 角色面板紧凑 */
 
-        .character-area {
-          padding: 8px !important;
+        /*
+       角色和气泡在手机上水平并排：
+       角色左，气泡右，气泡贴着人物嘴边
+    */
 
-          gap: 6px !important;
+        .character-area {
+          flex-direction: row !important;
+
+          align-items: center !important;
+
+          justify-content: center !important;
+
+          padding: 6px !important;
+
+          gap: 4px !important;
         }
 
         .character {
-          transform: scale(0.55);
+          flex: 0 0 auto;
 
-          transform-origin: center top;
+          transform: scale(0.4);
+
+          transform-origin: center center;
         }
 
         .speech {
-          font-size: 11px !important;
+          flex: 0 1 auto;
 
-          padding: 6px 10px !important;
+          font-size: 10px !important;
 
-          max-width: 95%;
+          padding: 5px 8px !important;
+
+          max-width: 80px;
+
+          min-height: 0;
+
+          line-height: 1.2;
+
+          text-align: center;
+
+          margin-top: 0 !important;
+
+          border-radius: 10px;
         }
 
         /* 按钮两列、紧凑 */
