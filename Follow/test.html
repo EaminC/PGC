@@ -831,19 +831,30 @@
 
         .chart {
           height: 100% !important;
-
           flex: 1;
 
           min-height: 0;
+
+          display: flex;
+
+          align-items: center;
+
+          justify-content: center;
+
+          overflow: hidden;
         }
 
-        /* SVG 用 meet 而不是 none，
-       避免格子是竖向时被 y 方向拉变形 */
+        /* SVG 在手机上按等比 fit（meet），
+       块缩小时元素不会被 y 方向拉变形 */
 
         #historyChart {
           width: 100%;
 
-          height: 100%;
+          height: auto;
+
+          max-height: 100%;
+
+          preserve-aspect-ratio: xMidYMid meet !important;
 
           display: block;
         }
@@ -896,14 +907,18 @@
           border-radius: 10px !important;
         }
 
-        /* 隐藏 X 轴编号里的内容，避免挤压 */
+        /*
+       SVG 内部文本补偿缩放：
+       viewBox 700×205 在手机上被压到 ~170×50，
+       等比缩放后 7px 字号会变成 ~1.7px 不可读。
+       改成 ~32px 让渲染后回到 7-8px。
+    */
 
-        .axis-label {
-          font-size: 7px;
-        }
-
+        .axis-label,
         .point-label {
-          font-size: 7px;
+          font-size: 32px !important;
+
+          font-weight: 600 !important;
         }
       }
     </style>
@@ -2071,6 +2086,29 @@
 
         speakFemale("我前天把你实验关了");
       }
+
+      /* =====================================================
+   SVG 在手机端按等比 fit
+   - preserveAspectRatio="none" 在块变窄时会把图表拉变形
+   - 手机 ≤ 600px 时切到 "xMidYMid meet"，
+     SVG 元素随容器等比缩小，不变形
+===================================================== */
+
+      function adjustChartAspect() {
+        const svg = document.getElementById("historyChart");
+
+        if (!svg) return;
+
+        if (window.innerWidth <= 600) {
+          svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+        } else {
+          svg.setAttribute("preserveAspectRatio", "none");
+        }
+      }
+
+      window.addEventListener("resize", adjustChartAspect);
+
+      adjustChartAspect();
 
       /* =====================================================
    初始化
