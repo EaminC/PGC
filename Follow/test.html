@@ -1,4 +1,3 @@
-```html
 <!doctype html>
 <html lang="zh-CN">
   <head>
@@ -607,14 +606,16 @@
       }
 
       /* =====================================================
-   强制 2x2 布局
+   自适应布局
+   - 不强制 2x2，何种屏幕都自然排列
+   - 每个单元格最小 330px，能并排放就并排放，
+     放不下就自动换行
 ===================================================== */
 
       .grid-2x2 {
         display: grid;
 
-        grid-template-columns: 330px 1fr;
-        grid-template-rows: auto auto;
+        grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
 
         gap: 20px;
 
@@ -686,22 +687,9 @@
    小屏幕
 ===================================================== */
 
-      @media (max-width: 850px) {
-        /*
-       在手机上才允许垂直排列，
-       防止桌面布局被压得太难看。
-    */
-
+      @media (max-width: 480px) {
         .grid-2x2 {
           grid-template-columns: 1fr;
-        }
-
-        .lt7-panel,
-        .character-area,
-        .controls {
-          flex-basis: auto;
-          width: 100%;
-          min-width: 0;
         }
       }
     </style>
@@ -1880,4 +1868,4 @@
     </script>
   </body>
 </html>
-```
+
