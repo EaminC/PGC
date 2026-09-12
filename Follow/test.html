@@ -684,12 +684,114 @@
         font-size: 13px;
       }
 
-      /*
-   不再有"小屏退化成单列"的退路，
-   强制 2x2 在所有屏幕宽度下都生效。
-   手机上每列约 150px，依然是两列两行。
-*/
+      /* =====================================================
+   移动端单独设计
+   - 屏幕 ≤ 600px 时切回单列堆叠，
+     不再死压 2x2
+   - 文字防竖排
+   - 按钮变全宽、易点
+===================================================== */
 
+      @media (max-width: 600px) {
+        body {
+          padding: 8px;
+        }
+
+        .game {
+          width: 100%;
+
+          max-width: 100%;
+
+          padding: 18px;
+
+          border-radius: 18px;
+        }
+
+        h1 {
+          font-size: 22px !important;
+
+          margin-bottom: 6px !important;
+        }
+
+        .subtitle {
+          font-size: 12px !important;
+        }
+
+        /* 关键：手机上回单列 */
+
+        .grid-2x2 {
+          grid-template-columns: 1fr !important;
+
+          grid-template-rows: auto auto auto auto !important;
+
+          gap: 14px !important;
+
+          margin-top: 18px !important;
+        }
+
+        /* 标题不竖排 */
+
+        .history-title,
+        .lt7-label,
+        .performance-title,
+        .speech {
+          white-space: nowrap;
+        }
+
+        /* LT7 数字不被挤成竖排 */
+
+        #lt7Value {
+          font-size: 38px !important;
+
+          letter-spacing: -1px;
+
+          white-space: nowrap;
+        }
+
+        /* 图表占满宽度，viewBox 自适应 */
+
+        .chart {
+          height: 200px;
+        }
+
+        /* 按钮全宽、方便拇指点 */
+
+        .controls {
+          flex-direction: row !important;
+
+          flex-wrap: wrap;
+
+          gap: 8px;
+        }
+
+        .control-button {
+          flex: 1 1 calc(50% - 4px);
+
+          min-width: 0;
+
+          padding: 12px 8px !important;
+
+          font-size: 14px !important;
+
+          white-space: nowrap;
+        }
+
+        /* 角色占中 */
+
+        .character-area {
+          padding: 14px !important;
+        }
+
+        .character {
+          transform: scale(0.85);
+        }
+
+        .speech {
+          font-size: 13px !important;
+
+          padding: 8px 14px !important;
+        }
+      }
     </style>
   </head>
 
