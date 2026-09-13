@@ -169,11 +169,51 @@
           if (window.OGCVoice) window.OGCVoice.speak(text, id);
         }
 
+        function queueSpeak(text, id) {
+          if (window.OGCVoice) window.OGCVoice.queueSpeak(text, id);
+        }
+
+        // 孤立结果播报：
+        //   非受害者 → 松口气
+        //   受害者   → 抱怨
+        //   结果     → 「被孤立的是 X」
+        // 用 queueSpeak 排队轮播，避免互相打断
+        const RELIEF_LINES = {
+          eamin: ["不是我", "好险", "还好不是我"],
+          j: ["不是我耶", "好险", "吓死我了"],
+          andy: ["不是我", "好耶", "太幸运了"],
+        };
+        const COMPLAINT_LINES = {
+          eamin: ["完了完了", "为什么是我", "又是我"],
+          j: ["怎么又是我", "完了", "讨厌"],
+          andy: ["为什么孤立我", "又是我", "好惨"],
+        };
+
+        function pickLine(map, id) {
+          const list = map[id] || [];
+          if (!list.length) return "";
+          return list[Math.floor(Math.random() * list.length)];
+        }
+
+        function announce(victim) {
+          // 非受害者先松口气（按数组顺序）
+          members.forEach((mid) => {
+            if (mid === victim) return;
+            queueSpeak(pickLine(RELIEF_LINES, mid), mid);
+          });
+          // 受害者抱怨
+          queueSpeak(pickLine(COMPLAINT_LINES, victim), victim);
+          // 最后正式播报
+          queueSpeak(`被孤立的是 ${displayNames[victim]}`, victim);
+        }
+
         function rollDice() {
           if (running) return;
           running = true;
           rollBtn.disabled = true;
           rollBtn.textContent = "摇骰子中…";
+          // 清掉上一局残留的语音排队
+          if (window.OGCVoice) window.OGCVoice.clearSpeech();
           reset();
 
           const final = 1 + Math.floor(Math.random() * 6);
@@ -206,7 +246,7 @@
         function showResult(victim) {
           resultEl.innerHTML = `被孤立的是 <span class="big">${displayNames[victim]}</span>！`;
           resultEl.classList.add("show");
-          speak(`被孤立的是 ${displayNames[victim]}`, victim);
+          announce(victim);
           rollBtn.disabled = false;
           rollBtn.textContent = "再来一次";
           running = false;

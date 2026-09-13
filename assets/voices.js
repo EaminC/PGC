@@ -2,9 +2,9 @@
  * voices.js — character-aware speech helper for OGC games
  *
  * 用法：
- *   OGCVoice.speak("道歉的话", "eamin");   // 用男声
- *   OGCVoice.speak("道歉的话", "j");        // 用女声
- *   OGCVoice.speak("道歉的话", "andy");     // 用年轻女声
+ *   OGCVoice.speak("道歉的话", "eamin");     // 打断当前 + 立刻播
+ *   OGCVoice.queueSpeak("都是 Eamin 不好", "j", { rate: 1.5 }); // 入队轮播
+ *   OGCVoice.clearSpeech();                  // 清空队列 + cancel
  *
  * 内部会：
  *   1) 按 profile 设 pitch / rate 区分性别
@@ -58,6 +58,10 @@
 
   let voicesCache = null;
 
+  // 提前声明：speak / processQueue 都会用到这两个状态
+  const speechQueue = [];
+  let speaking = false;
+
   function loadVoices() {
     if (!("speechSynthesis" in window)) return [];
     const v = window.speechSynthesis.getVoices();
@@ -103,10 +107,6 @@
       console.warn("[OGCVoice] speak failed:", e);
     }
   }
-
-  // 排队播报：不打断正在播放的语音，按入队顺序逐条播放
-  const speechQueue = [];
-  let speaking = false;
 
   function processQueue() {
     if (!speechQueue.length) {
