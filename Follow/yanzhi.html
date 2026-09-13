@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yanzhi · 游戏选择</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #fff5f0, #ffe2d6);
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+        color: #37474f;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.96);
+        border-radius: 22px;
+        padding: 32px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+
+      .back {
+        text-decoration: none;
+        color: #607d8b;
+        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 10px;
+        background: #eceff1;
+        transition: background 0.15s;
+      }
+      .back:hover {
+        background: #cfd8dc;
+      }
+
+      h1 {
+        text-align: center;
+        margin: 0 0 6px;
+        font-size: 26px;
+        color: #4e342e;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #78909c;
+        font-size: 13px;
+        margin-bottom: 26px;
+      }
+
+      .boss-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 28px;
+      }
+
+      .boss-avatar {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        background: #37474f;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .boss-avatar .b-hair {
+        position: absolute;
+        width: 76px;
+        height: 20px;
+        background: #1a1a1a;
+        border-radius: 38px 38px 4px 4px;
+        top: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .boss-avatar .b-hair::before {
+        content: "";
+        position: absolute;
+        width: 46px;
+        height: 6px;
+        background: #6a6a6a;
+        border-radius: 3px;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .boss-avatar .b-face {
+        position: absolute;
+        width: 66px;
+        height: 60px;
+        background: #ffd6bd;
+        border-radius: 48% 48% 45% 45%;
+        top: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .boss-avatar .b-eye {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        background: #333;
+        border-radius: 50%;
+        top: 22px;
+      }
+      .boss-avatar .b-eye.left { left: calc(50% - 14px); }
+      .boss-avatar .b-eye.right { right: calc(50% - 14px); }
+      .boss-avatar .b-mouth {
+        position: absolute;
+        width: 16px;
+        height: 7px;
+        border-bottom: 2px solid #a34c4c;
+        border-radius: 0 0 50% 50%;
+        left: 50%;
+        top: 42px;
+        transform: translateX(-50%);
+      }
+
+      .boss-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #4e342e;
+      }
+      .boss-tag {
+        font-size: 11px;
+        color: #8d6e63;
+        margin-top: 2px;
+      }
+
+      .games {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .game-tile {
+        background: #fff5f0;
+        border: 2px solid #d7ccc8;
+        border-radius: 18px;
+        padding: 22px 16px;
+        text-align: center;
+        text-decoration: none;
+        color: #4e342e;
+        font-weight: 700;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .game-tile:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        border-color: #a1887f;
+      }
+
+      .game-tile .icon {
+        font-size: 38px;
+        margin-bottom: 8px;
+      }
+
+      .game-tile .title {
+        font-size: 17px;
+        margin-bottom: 6px;
+      }
+
+      .game-tile .desc {
+        font-size: 12px;
+        color: #8d6e63;
+        font-weight: 500;
+        line-height: 1.55;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding: 14px;
+        }
+        .container {
+          padding: 22px 16px;
+        }
+        h1 {
+          font-size: 22px;
+        }
+        .games {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <a class="back" href="../index.html">← 返回选人</a>
+        <span></span>
+      </div>
+
+      <h1>Yanzhi · 找你 1-1</h1>
+      <div class="subtitle">一个永远垫底的男人</div>
+
+      <div class="boss-area">
+        <div class="boss-avatar">
+          <div class="b-hair"></div>
+          <div class="b-face">
+            <div class="b-eye left"></div>
+            <div class="b-eye right"></div>
+            <div class="b-mouth"></div>
+          </div>
+        </div>
+        <div class="boss-name">Yanzhi</div>
+        <div class="boss-tag">中年男人 · Boss</div>
+      </div>
+
+      <div class="games">
+        <a class="game-tile" href="yanzhi-golf.html">
+          <div class="icon">⛳</div>
+          <div class="title">和 Yanzhi 打高尔夫</div>
+          <div class="desc">
+            vs J · Eamin · Andy<br />
+            概率上他几乎永远是第四名<br />
+            顺便让你听一点职场屁话
+          </div>
+        </a>
+
+        <a class="game-tile" href="yanzhi-find.html">
+          <div class="icon">📞</div>
+          <div class="title">Yanzhi 找你 1-1</div>
+          <div class="desc">
+            他会先问你一个问题<br />
+            然后用一千字屁话快速糊你一脸<br />
+            朗读可以跳过
+          </div>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

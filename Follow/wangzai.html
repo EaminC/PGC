@@ -402,6 +402,8 @@
         border-radius: 22px 22px 14px 14px;
         left: 6px;
         top: 76px;
+        z-index: 2;
+      }
 
       .allknow-row .mini-name {
         margin-top: 4px;
@@ -446,8 +448,8 @@
         width: 4px;
         height: 4px;
       }
-      .allknow-row .mini-character.abb .eye.left { left: 8px; }
-      .allknow-row .mini-character.abb .eye.right { right: 8px; }
+      .allknow-row .mini-character.abb .eye.left { left: 22px; }
+      .allknow-row .mini-character.abb .eye.right { right: 22px; }
       .allknow-row .mini-character.abb .mouth {
         width: 14px;
         height: 6px;
@@ -505,8 +507,8 @@
         width: 4px;
         height: 4px;
       }
-      .allknow-row .mini-character.wangzai .eye.left { left: 8px; }
-      .allknow-row .mini-character.wangzai .eye.right { right: 8px; }
+      .allknow-row .mini-character.wangzai .eye.left { left: 22px; }
+      .allknow-row .mini-character.wangzai .eye.right { right: 22px; }
       .allknow-row .mini-character.wangzai .mouth {
         width: 14px;
         height: 6px;
@@ -543,28 +545,28 @@
         height: 36px;
         top: 16px;
         left: 50%;
-        margin-left: -16px;
+        transform: translateX(-50%);
       }
       .allknow-row .mini-character.ogc .ch .c-eye {
         width: 4px;
         height: 4px;
         top: 30px;
       }
-      .allknow-row .mini-character.ogc .ch .c-eye.left { left: 8px; }
-      .allknow-row .mini-character.ogc .ch .c-eye.right { right: 8px; }
+      .allknow-row .mini-character.ogc .ch .c-eye.left { left: 22px; }
+      .allknow-row .mini-character.ogc .ch .c-eye.right { right: 22px; }
       .allknow-row .mini-character.ogc .ch .c-mouth {
         width: 14px;
         height: 6px;
         top: 40px;
         left: 50%;
-        margin-left: -7px;
+        transform: translateX(-50%);
       }
       .allknow-row .mini-character.ogc .ch .c-body {
         width: 42px;
         height: 28px;
         top: 50px;
         left: 50%;
-        margin-left: -21px;
+        transform: translateX(-50%);
       }
 
       .allknow-row .mini-character.ogc.eamin .ch .c-hair {
@@ -572,7 +574,7 @@
         height: 12px;
         top: 14px;
         left: 50%;
-        margin-left: -18px;
+        transform: translateX(-50%);
         border-radius: 18px 18px 4px 4px;
       }
       .allknow-row .mini-character.ogc.j .ch .c-hair {
@@ -580,7 +582,7 @@
         height: 50px;
         top: 8px;
         left: 50%;
-        margin-left: -23px;
+        transform: translateX(-50%);
         border-radius: 23px 23px 10px 10px;
       }
       .allknow-row .mini-character.ogc.j .ch .c-hair::before,
@@ -597,7 +599,7 @@
         height: 28px;
         top: 12px;
         left: 50%;
-        margin-left: -19px;
+        transform: translateX(-50%);
         border-radius: 19px 19px 10px 10px;
       }
       .allknow-row .mini-character.ogc.andy .ch .c-hair::before,
@@ -735,22 +737,20 @@
 
         <div class="mini-character abb">
           <div class="hair"></div>
-          <div class="face">
-            <div class="eye left"></div>
-            <div class="eye right"></div>
-            <div class="mouth"></div>
-          </div>
+          <div class="face"></div>
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="mouth"></div>
           <div class="body"></div>
           <div class="mini-name">ABB</div>
         </div>
 
         <div class="mini-character wangzai">
           <div class="hair"></div>
-          <div class="face">
-            <div class="eye left"></div>
-            <div class="eye right"></div>
-            <div class="mouth"></div>
-          </div>
+          <div class="face"></div>
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="mouth"></div>
           <div class="body"></div>
           <div class="mini-name">旺仔</div>
         </div>

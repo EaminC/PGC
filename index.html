@@ -52,14 +52,55 @@
       .boss-card {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 6px 14px 6px 10px;
+        gap: 10px;
+        padding: 8px 18px 8px 10px;
         border-radius: 999px;
         background: linear-gradient(135deg, #ffd6bd, #ffe5d0);
         color: #5d4037;
         font-weight: 700;
         font-size: 14px;
+        text-decoration: none;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+      }
+
+      .boss-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+      }
+
+      .boss-card .avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+        background: #37474f;
+      }
+
+      .boss-card .avatar::before {
+        content: "";
+        position: absolute;
+        width: 22px;
+        height: 8px;
+        background: #1a1a1a;
+        border-radius: 11px 11px 3px 3px;
+        top: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .boss-card .avatar::after {
+        content: "";
+        position: absolute;
+        width: 4px;
+        height: 10px;
+        background: #c62828;
+        border-radius: 2px;
+        bottom: -2px;
+        left: 50%;
+        transform: translateX(-50%);
       }
 
       .boss-card .badge {
@@ -339,6 +380,69 @@
         background: #d96363;
       }
 
+      /* Yanzhi（中年男人）*/
+      .mini.yanzhi .m-hair {
+        width: 50px;
+        height: 12px;
+        background: #1a1a1a;
+        border-radius: 25px 25px 4px 4px;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .mini.yanzhi .m-hair::before {
+        content: "";
+        position: absolute;
+        width: 32px;
+        height: 4px;
+        background: #5a5a5a;
+        border-radius: 2px;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .mini.yanzhi .m-body {
+        background: #37474f;
+        width: 60px;
+        height: 42px;
+      }
+      .mini.yanzhi .m-body::before {
+        content: "";
+        position: absolute;
+        width: 5px;
+        height: 16px;
+        background: #c62828;
+        border-radius: 2px;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      /* Ego 姐（年轻马尾女生）*/
+      .mini.ego .m-hair {
+        width: 44px;
+        height: 18px;
+        background: #3a2418;
+        border-radius: 22px 22px 6px 6px;
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .mini.ego .m-hair::before {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 26px;
+        background: #3a2418;
+        border-radius: 8px 8px 4px 4px;
+        top: -22px;
+        left: 56%;
+        transform: translateX(-50%) rotate(10deg);
+      }
+      .mini.ego .m-body {
+        background: #ec407a;
+      }
+
       /* === 移动端 === */
       @media (max-width: 480px) {
         body {
@@ -377,10 +481,11 @@
       <div class="subtitle">选一个角色进入游戏</div>
 
       <div class="boss">
-        <div class="boss-card">
+        <a class="boss-card" href="Follow/yanzhi.html">
+          <span class="avatar"></span>
           Yanzhi
-          <span class="badge">待上线</span>
-        </div>
+          <span class="badge">Boss</span>
+        </a>
       </div>
 
       <div class="chars">
@@ -467,6 +572,23 @@
           </div>
           <div class="char-name">旺仔</div>
           <div class="char-role">Follow大头兵</div>
+        </a>
+
+        <!-- Ego 姐 → Follow 小游戏 -->
+        <a class="char-card" href="Follow/ego.html">
+          <span class="team-tag">Follow</span>
+          <div class="char-svg">
+            <div class="mini ego">
+              <div class="m-hair"></div>
+              <div class="m-face"></div>
+              <div class="m-eye left"></div>
+              <div class="m-eye right"></div>
+              <div class="m-mouth"></div>
+              <div class="m-body"></div>
+            </div>
+          </div>
+          <div class="char-name">Ego 姐</div>
+          <div class="char-role">小游戏大头兵</div>
         </a>
       </div>
     </div>

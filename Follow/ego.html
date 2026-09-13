@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ego 姐 · 小游戏大头兵</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+        color: #4a148c;
+      }
+
+      .container {
+        max-width: 720px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.96);
+        border-radius: 22px;
+        padding: 28px 24px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .back {
+        text-decoration: none;
+        color: #607d8b;
+        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 10px;
+        background: #eceff1;
+        transition: background 0.15s;
+      }
+      .back:hover {
+        background: #cfd8dc;
+      }
+
+      h1 {
+        text-align: center;
+        margin: 0 0 4px;
+        font-size: 24px;
+        color: #880e4f;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #8e24aa;
+        font-size: 13px;
+        margin-bottom: 20px;
+      }
+
+      /* === 舞台 === */
+      .stage {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        padding: 12px 0 8px;
+        min-height: 210px;
+      }
+
+      .ego-char {
+        position: relative;
+        width: 110px;
+        height: 180px;
+      }
+
+      .ego-char .hair {
+        position: absolute;
+        width: 72px;
+        height: 32px;
+        background: #3a2418;
+        border-radius: 36px 36px 10px 10px;
+        top: 18px;
+        left: 19px;
+        z-index: 3;
+      }
+      /* 高马尾的发髻 */
+      .ego-char .hair::before {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 30px;
+        background: #3a2418;
+        border-radius: 10px 10px 4px 4px;
+        top: -26px;
+        left: 56%;
+        transform: translateX(-50%) rotate(12deg);
+      }
+
+      .ego-char .face {
+        position: absolute;
+        width: 90px;
+        height: 100px;
+        background: #ffd6bd;
+        border-radius: 48% 48% 45% 45%;
+        left: 10px;
+        top: 36px;
+        z-index: 4;
+      }
+
+      .ego-char .eye {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #333;
+        border-radius: 50%;
+        top: 24px;
+        z-index: 5;
+      }
+      .ego-char .eye.left { left: 26px; }
+      .ego-char .eye.right { right: 26px; }
+
+      .ego-char .mouth {
+        position: absolute;
+        width: 18px;
+        height: 8px;
+        border-bottom: 2px solid #a34c4c;
+        border-radius: 0 0 50% 50%;
+        left: 50%;
+        top: 56px;
+        transform: translateX(-50%);
+        z-index: 5;
+      }
+
+      .ego-char .body {
+        position: absolute;
+        width: 110px;
+        height: 80px;
+        background: #ec407a;
+        border-radius: 30px 30px 22px 22px;
+        left: 50%;
+        top: 128px;
+        transform: translateX(-50%);
+        z-index: 2;
+      }
+
+      /* === 输入区 === */
+      .input-section {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin: 12px auto 0;
+        max-width: 540px;
+        padding: 14px 16px;
+        background: #fce4ec;
+        border-radius: 14px;
+        border: 2px dashed #ec407a;
+      }
+
+      .input-section label {
+        font-size: 14px;
+        font-weight: 700;
+        color: #880e4f;
+        white-space: nowrap;
+      }
+
+      .input-section input {
+        flex: 1;
+        padding: 9px 12px;
+        font-size: 14px;
+        border: 1px solid #f48fb1;
+        border-radius: 8px;
+        outline: none;
+        background: #fff;
+        transition: border-color 0.15s;
+      }
+      .input-section input:focus {
+        border-color: #ec407a;
+      }
+      .input-section input:disabled {
+        background: #f5f5f5;
+        color: #90a4ae;
+      }
+
+      .input-section button {
+        padding: 9px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        background: #ec407a;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.15s, transform 0.1s;
+      }
+      .input-section button:hover:not(:disabled) {
+        background: #c2185b;
+      }
+      .input-section button:active:not(:disabled) {
+        transform: scale(0.95);
+      }
+      .input-section button:disabled {
+        background: #f48fb1;
+        cursor: not-allowed;
+      }
+
+      .hint {
+        text-align: center;
+        color: #ad1457;
+        font-size: 12px;
+        margin-top: 10px;
+      }
+
+      /* === 通话面板 === */
+      .call-panel {
+        margin-top: 22px;
+        background: #fafafa;
+        border-radius: 14px;
+        padding: 16px;
+        display: none;
+      }
+      .call-panel.show {
+        display: block;
+      }
+
+      .call-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 12px;
+        border-bottom: 1px dashed #f8bbd0;
+        margin-bottom: 12px;
+        font-size: 12px;
+        color: #ad1457;
+      }
+      .call-meta .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #ec407a;
+        animation: pulse-dot 1.5s ease-in-out infinite;
+      }
+      @keyframes pulse-dot {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+      }
+
+      .call-actions {
+        margin-left: auto;
+        display: flex;
+        gap: 6px;
+      }
+      .call-actions button {
+        padding: 5px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #fce4ec;
+        color: #880e4f;
+        transition: background 0.15s;
+      }
+      .call-actions button:hover {
+        background: #f8bbd0;
+      }
+
+      /* === 对话日志 === */
+      .call-log {
+        max-height: 320px;
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+      .call-log::-webkit-scrollbar {
+        width: 6px;
+      }
+      .call-log::-webkit-scrollbar-thumb {
+        background: #f8bbd0;
+        border-radius: 3px;
+      }
+
+      .bubble-row {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .bubble-row .avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #ec407a;
+        flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+      }
+      .bubble-row .avatar::before {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 8px;
+        background: #3a2418;
+        border-radius: 10px 10px 2px 2px;
+        top: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .bubble-row .avatar::after {
+        content: "";
+        position: absolute;
+        width: 6px;
+        height: 10px;
+        background: #3a2418;
+        border-radius: 2px;
+        top: -3px;
+        right: 6px;
+        transform: rotate(15deg);
+      }
+
+      .bubble {
+        background: #fce4ec;
+        border: 1px solid #ec407a;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #4a148c;
+        max-width: calc(100% - 50px);
+      }
+
+      .bubble.signature {
+        font-weight: 700;
+        background: #f8bbd0;
+        color: #880e4f;
+      }
+
+      .bubble.signature .seg {
+        display: inline;
+      }
+
+      .bubble.signature .seg.special {
+        font-weight: 800;
+        color: #ad1457;
+      }
+
+      .user-q {
+        font-size: 12px;
+        color: #8e24aa;
+        text-align: center;
+        margin: 4px 0 12px;
+        font-style: italic;
+      }
+      .user-q::before {
+        content: "❝ ";
+      }
+      .user-q::after {
+        content: " ❞";
+      }
+
+      @media (max-width: 600px) {
+        body { padding: 14px; }
+        .container { padding: 22px 14px; }
+        h1 { font-size: 20px; }
+        .input-section {
+          flex-wrap: wrap;
+        }
+        .input-section input {
+          flex: 1 1 100%;
+          order: 2;
+        }
+        .input-section button {
+          order: 3;
+          flex: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <a class="back" href="../index.html">← 返回选人</a>
+        <span style="font-size:11px;color:#ad1457">Follow · Ego 姐（小游戏大头兵）</span>
+      </div>
+
+      <h1>👱‍♀️ Ego 姐 · 小游戏大头兵</h1>
+      <div class="subtitle">不管你问什么，她都会想起清华</div>
+
+      <div class="stage">
+        <div class="ego-char">
+          <div class="hair"></div>
+          <div class="face">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="mouth"></div>
+          </div>
+          <div class="body"></div>
+        </div>
+      </div>
+
+      <div class="input-section">
+        <label for="questionInput">问 Ego 姐：</label>
+        <input
+          id="questionInput"
+          type="text"
+          placeholder="例如：我该不该跳槽 / 周末吃什么"
+          maxlength="40"
+        />
+        <button id="askBtn" type="button">问她</button>
+      </div>
+      <div class="hint">输入任何问题 → 她都会先想起清华计算机系 → 然后给你一句万金油答案</div>
+
+      <div id="callPanel" class="call-panel">
+        <div class="call-meta">
+          <span class="dot"></span>
+          <span>Ego 姐 在说</span>
+          <div class="call-actions">
+            <button id="skipBtn" type="button">跳过朗读</button>
+          </div>
+        </div>
+        <div id="callLog" class="call-log"></div>
+      </div>
+    </div>
+
+    <script src="../assets/voices.js"></script>
+    <script>
+      // === Ego 的万金油答案库 ===
+      const UNIVERSAL_ANSWERS = [
+        "其实啊，关键是要找到内心的平静。",
+        "心态决定一切，我以前也这么纠结过。",
+        "从哲学的角度来看，这其实是一个伪命题。",
+        "我觉得吧，凡事要学会放下。",
+        "人生就是一场修行，不用太纠结。",
+        "结果不重要，过程才是最重要的。",
+        "换个角度想，其实也没什么大不了的。",
+        "但行好事，莫问前程。",
+        "记住，凡事都有两面性。",
+        "这事儿没那么复杂，你想太多了。",
+        "你问得很好，但答案需要你自己去寻找。",
+        "我清华的同学也问过我类似的问题。",
+        "在清华读书的时候，我也思考过这个问题。",
+        "关键是不要想太多，想多了就累。",
+        "有时候啊，换个角度想就好了。",
+        "其实啊，我清华的老师也说过类似的话。",
+        "我觉得吧，这件事就看你怎么想。",
+        "你问的这个问题，我当年也问过我的导师。",
+        "在清华计算机系，我们管这叫 debug 人生。",
+        "我跟你说啊，人生就是写代码，bug 总会有的。",
+        "心态好，一切都好。我清华的时候就明白了这个道理。",
+        "其实这件事，跟写递归一样，先有个终止条件就好办了。",
+        "你想啊，人生就是个大数组，你是其中一格。",
+        "要我说啊，这个问题就是个 null pointer，没什么好纠结的。",
+        "嗯……让我想想。我清华读书的时候也遇到过类似的情况。",
+      ];
+
+      // === Ego 的招牌句（分句版，用于特殊语速/音调） ===
+      const SIGNATURE_SEGMENTS = [
+        { text: "这让我想起了我在清华大学", cls: "seg", rate: 1.0, pitch: 1.4 },
+        { text: "计", cls: "seg special", rate: 0.5, pitch: 1.6 },
+        { text: "算", cls: "seg special", rate: 0.5, pitch: 1.8 },
+        { text: "机", cls: "seg special", rate: 0.5, pitch: 2.0 },
+        { text: "系", cls: "seg special", rate: 0.5, pitch: 2.0 },
+        { text: "读书的时候", cls: "seg", rate: 1.0, pitch: 1.4 },
+      ];
+
+      const questionInput = document.getElementById("questionInput");
+      const askBtn = document.getElementById("askBtn");
+      const callPanel = document.getElementById("callPanel");
+      const callLog = document.getElementById("callLog");
+      const skipBtn = document.getElementById("skipBtn");
+
+      let busy = false;
+
+      function appendBubble(text, opts = {}) {
+        const row = document.createElement("div");
+        row.className = "bubble-row ego";
+
+        const av = document.createElement("div");
+        av.className = "avatar";
+
+        const b = document.createElement("div");
+        if (opts.segments) {
+          b.className = "bubble signature";
+          opts.segments.forEach((s) => {
+            const sp = document.createElement("span");
+            sp.className = s.cls;
+            sp.textContent = s.text;
+            b.appendChild(sp);
+          });
+        } else {
+          b.className = "bubble" + (opts.cls ? " " + opts.cls : "");
+          b.textContent = text;
+        }
+
+        row.appendChild(av);
+        row.appendChild(b);
+        callLog.appendChild(row);
+        callLog.scrollTop = callLog.scrollHeight;
+      }
+
+      function appendUserQ(text) {
+        const q = document.createElement("div");
+        q.className = "user-q";
+        q.textContent = text;
+        callLog.appendChild(q);
+        callLog.scrollTop = callLog.scrollHeight;
+      }
+
+      function ask() {
+        if (busy) return;
+        const question = String(questionInput.value || "").trim();
+        if (!question) {
+          questionInput.focus();
+          questionInput.placeholder = "问题不能为空哦";
+          return;
+        }
+
+        busy = true;
+        askBtn.disabled = true;
+        questionInput.disabled = true;
+        callLog.innerHTML = "";
+        callPanel.classList.add("show");
+
+        if (window.OGCVoice) window.OGCVoice.clearSpeech();
+
+        // 1) 用户问题
+        appendUserQ(question);
+
+        // 2) Ego 招牌句 + 朗读（分段）
+        appendBubble(null, { segments: SIGNATURE_SEGMENTS });
+        if (window.OGCVoice) {
+          SIGNATURE_SEGMENTS.forEach((seg) => {
+            window.OGCVoice.queueSpeak(seg.text, "ego", {
+              rate: seg.rate,
+              pitch: seg.pitch,
+            });
+          });
+        }
+
+        // 3) 等招牌句说完，给万金油答案
+        const sigMs = SIGNATURE_SEGMENTS.reduce((sum, s) => {
+          return sum + Math.max(400, Math.round((s.text.length * 280) / s.rate) + 200);
+        }, 300);
+
+        setTimeout(() => {
+          const ans =
+            UNIVERSAL_ANSWERS[Math.floor(Math.random() * UNIVERSAL_ANSWERS.length)];
+          appendBubble(ans);
+          if (window.OGCVoice) {
+            window.OGCVoice.queueSpeak(ans, "ego");
+          }
+        }, sigMs);
+
+        // 兜底恢复
+        const ansMs = 1500;
+        const totalMs = sigMs + ansMs + 800;
+        setTimeout(() => {
+          busy = false;
+          askBtn.disabled = false;
+          questionInput.disabled = false;
+          questionInput.value = "";
+          questionInput.focus();
+        }, totalMs);
+      }
+
+      askBtn.addEventListener("click", ask);
+      questionInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          ask();
+        }
+      });
+
+      skipBtn.addEventListener("click", () => {
+        if (window.OGCVoice) {
+          window.OGCVoice.clearSpeech();
+        }
+        busy = false;
+        askBtn.disabled = false;
+        questionInput.disabled = false;
+        questionInput.value = "";
+        questionInput.focus();
+      });
+
+      questionInput.focus();
+    </script>
+  </body>
+</html>
