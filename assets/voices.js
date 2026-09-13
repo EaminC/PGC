@@ -24,8 +24,9 @@
     wangzai: { pitch: 0.95, rate: 1.0, voiceHint: "male" },
     // 女程序员（Follow POC）：比 j 略低、稍慢，区分两位女声
     abb: { pitch: 1.15, rate: 0.98, voiceHint: "female" },
-    // Yanzhi（中年男人）：pitch 更低、rate 偏慢，沉稳
-    yanzhi: { pitch: 0.6, rate: 0.85, voiceHint: "male" },
+    // 男（中年）：pitch 适度压低、rate 偏慢，沉稳但不闷
+    // （旧版 0.6/0.85 在部分中文声线下会被引擎削到近乎静音，所以拉回到安全区间）
+    yanzhi: { pitch: 0.78, rate: 0.92, voiceHint: "male" },
     // Ego 姐（年轻马尾女）：pitch 拉高、rate 略快，清亮活泼
     ego: { pitch: 1.5, rate: 1.1, voiceHint: "female-young" },
   };

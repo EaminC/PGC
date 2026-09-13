@@ -620,10 +620,13 @@
           }
         }
 
-        // 等语音说完再展示排名
+        // 等语音说完再展示排名 —— 按 phrase 实际长度 / rate 算，不再用杆数
+        const yanzhiRate = (window.OGCVoice && window.OGCVoice.PROFILES.yanzhi)
+          ? window.OGCVoice.PROFILES.yanzhi.rate
+          : 0.92;
         const phraseMs = Math.max(
-          900,
-          Math.round(results.yanzhi * 280) + 500
+          1500,
+          Math.round((phrase.length * 280) / yanzhiRate) + 600
         );
         await new Promise((r) => setTimeout(r, phraseMs));
 
