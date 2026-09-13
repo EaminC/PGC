@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OGC · 孤立</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #eef3f8, #dfe8f0);
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+        color: #37474f;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 22px;
+        padding: 28px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .back {
+        text-decoration: none;
+        color: #607d8b;
+        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 10px;
+        background: #eceff1;
+      }
+      .back:hover {
+        background: #cfd8dc;
+      }
+
+      h1 {
+        text-align: center;
+        margin: 0 0 4px;
+        font-size: 24px;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #78909c;
+        font-size: 13px;
+        margin-bottom: 22px;
+      }
+
+      /* 三人站位 */
+      .stage {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 12px;
+        padding: 24px 8px 36px;
+        min-height: 320px;
+      }
+
+      .char-card {
+        position: relative;
+        width: 200px;
+        text-align: center;
+        transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+          filter 0.5s, opacity 0.5s;
+      }
+
+      .char-card .name {
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .char-card .role {
+        font-size: 11px;
+        color: #78909c;
+        margin-bottom: 6px;
+      }
+
+      .char-svg {
+        width: 150px;
+        height: 190px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      /* 角色 SVG 主体（与 apology.html 复用结构） */
+      .ch {
+        position: absolute;
+        inset: 0;
+      }
+      .ch .c-hair {
+        position: absolute;
+        z-index: 3;
+      }
+      .ch .c-face {
+        position: absolute;
+        width: 84px;
+        height: 94px;
+        background: #ffd6bd;
+        border-radius: 48% 48% 45% 45%;
+        left: 50%;
+        top: 46px;
+        transform: translateX(-50%);
+        z-index: 4;
+      }
+      .ch .c-eye {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #333;
+        border-radius: 50%;
+        top: 84px;
+        z-index: 5;
+      }
+      .ch .c-eye.left {
+        left: calc(50% - 18px);
+      }
+      .ch .c-eye.right {
+        right: calc(50% - 18px);
+      }
+      .ch .c-mouth {
+        position: absolute;
+        width: 22px;
+        height: 10px;
+        border-bottom: 3px solid #a34c4c;
+        border-radius: 0 0 50% 50%;
+        left: 50%;
+        top: 108px;
+        transform: translateX(-50%);
+        z-index: 5;
+        transition: all 0.3s ease;
+      }
+      .sad .c-mouth {
+        width: 22px;
+        height: 10px;
+        top: 114px;
+        border-top: 3px solid #a34c4c;
+        border-bottom: none;
+        border-radius: 50% 50% 0 0;
+      }
+      .ch .c-body {
+        position: absolute;
+        width: 108px;
+        height: 78px;
+        border-radius: 28px 28px 22px 22px;
+        left: 50%;
+        top: 140px;
+        transform: translateX(-50%);
+        z-index: 2;
+        transition: filter 0.5s;
+      }
+
+      /* Eamin */
+      .ch.eamin .c-hair {
+        width: 92px;
+        height: 30px;
+        background: #1a1a1a;
+        border-radius: 46px 46px 10px 10px;
+        top: 34px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .ch.eamin .c-body {
+        background: #455a64;
+      }
+
+      /* J */
+      .ch.j .c-hair {
+        width: 118px;
+        height: 132px;
+        background: #3a2418;
+        border-radius: 59px 59px 28px 28px;
+        top: 26px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .ch.j .c-hair::before,
+      .ch.j .c-hair::after {
+        content: "";
+        position: absolute;
+        width: 22px;
+        height: 76px;
+        background: #3a2418;
+        bottom: -46px;
+        border-radius: 0 0 18px 18px;
+      }
+      .ch.j .c-hair::before {
+        left: 4px;
+      }
+      .ch.j .c-hair::after {
+        right: 4px;
+      }
+      .ch.j .c-body {
+        background: #f48fb1;
+      }
+
+      /* Andy */
+      .ch.andy .c-hair {
+        width: 96px;
+        height: 72px;
+        background: #6e4426;
+        border-radius: 50% 50% 24px 24px;
+        top: 32px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .ch.andy .c-hair::before,
+      .ch.andy .c-hair::after {
+        content: "";
+        position: absolute;
+        width: 22px;
+        height: 40px;
+        background: #6e4426;
+        bottom: -14px;
+        border-radius: 0 0 14px 14px;
+      }
+      .ch.andy .c-hair::before {
+        left: 0;
+      }
+      .ch.andy .c-hair::after {
+        right: 0;
+      }
+      .ch.andy .c-body {
+        background: #ffb74d;
+      }
+
+      /* 孤立状态 */
+      .char-card.isolated {
+        transform: translateY(20px);
+        filter: grayscale(0.85) opacity(0.55);
+      }
+      .char-card.sad .c-mouth {
+        top: 114px;
+        border-top: 3px solid #a34c4c;
+        border-bottom: none;
+        border-radius: 50% 50% 0 0;
+      }
+
+      /* 骰子 */
+      .dice-wrap {
+        text-align: center;
+        margin: 14px 0 6px;
+      }
+
+      .dice {
+        display: inline-block;
+        width: 64px;
+        height: 64px;
+        background: #fff;
+        border: 2px solid #37474f;
+        border-radius: 14px;
+        padding: 8px;
+        display: inline-grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 4px;
+        transition: transform 0.1s;
+      }
+
+      .dice .dot {
+        background: #37474f;
+        border-radius: 50%;
+        width: 12px;
+        height: 12px;
+        align-self: center;
+        justify-self: center;
+      }
+
+      /* 骰子面（9 宫格，1-6 的位置） */
+      .face-1 .dot { grid-area: 2 / 2; }
+      .face-2 .dot:nth-child(1) { grid-area: 1 / 1; }
+      .face-2 .dot:nth-child(2) { grid-area: 3 / 3; }
+      .face-3 .dot:nth-child(1) { grid-area: 1 / 1; }
+      .face-3 .dot:nth-child(2) { grid-area: 2 / 2; }
+      .face-3 .dot:nth-child(3) { grid-area: 3 / 3; }
+      .face-4 .dot:nth-child(1) { grid-area: 1 / 1; }
+      .face-4 .dot:nth-child(2) { grid-area: 1 / 3; }
+      .face-4 .dot:nth-child(3) { grid-area: 3 / 1; }
+      .face-4 .dot:nth-child(4) { grid-area: 3 / 3; }
+      .face-5 .dot:nth-child(1) { grid-area: 1 / 1; }
+      .face-5 .dot:nth-child(2) { grid-area: 1 / 3; }
+      .face-5 .dot:nth-child(3) { grid-area: 2 / 2; }
+      .face-5 .dot:nth-child(4) { grid-area: 3 / 1; }
+      .face-5 .dot:nth-child(5) { grid-area: 3 / 3; }
+      .face-6 .dot:nth-child(1) { grid-area: 1 / 1; }
+      .face-6 .dot:nth-child(2) { grid-area: 1 / 3; }
+      .face-6 .dot:nth-child(3) { grid-area: 2 / 1; }
+      .face-6 .dot:nth-child(4) { grid-area: 2 / 3; }
+      .face-6 .dot:nth-child(5) { grid-area: 3 / 1; }
+      .face-6 .dot:nth-child(6) { grid-area: 3 / 3; }
+
+      .dice.spin {
+        animation: diceRoll 0.12s linear infinite;
+      }
+      @keyframes diceRoll {
+        0% { transform: rotate(0deg) scale(1); }
+        25% { transform: rotate(90deg) scale(0.95); }
+        50% { transform: rotate(180deg) scale(1); }
+        75% { transform: rotate(270deg) scale(0.95); }
+        100% { transform: rotate(360deg) scale(1); }
+      }
+
+      /* 控制按钮 */
+      .controls {
+        text-align: center;
+        margin-top: 12px;
+      }
+
+      .roll-btn {
+        background: #37474f;
+        color: #fff;
+        border: none;
+        padding: 12px 36px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 14px;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+      }
+      .roll-btn:hover:not(:disabled) {
+        background: #263238;
+      }
+      .roll-btn:active:not(:disabled) {
+        transform: scale(0.97);
+      }
+      .roll-btn:disabled {
+        background: #90a4ae;
+        cursor: not-allowed;
+      }
+
+      /* 结果 */
+      .result {
+        margin-top: 22px;
+        padding: 18px 22px;
+        text-align: center;
+        font-size: 22px;
+        font-weight: 800;
+        color: #37474f;
+        background: #fff3cd;
+        border-radius: 16px;
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+      .result.show {
+        opacity: 1;
+      }
+      .result .big {
+        font-size: 30px;
+        color: #c0392b;
+      }
+
+      @media (max-width: 700px) {
+        body {
+          padding: 12px;
+        }
+        .container {
+          padding: 18px;
+        }
+        .stage {
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+        }
+        .char-card {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <a class="back" href="index.html">← 返回 OGC</a>
+        <span></span>
+      </div>
+
+      <h1>🎲 孤立</h1>
+      <div class="subtitle">看谁被孤立</div>
+
+      <div class="stage" id="stage">
+        <div class="char-card" data-id="eamin">
+          <div class="name">Eamin</div>
+          <div class="role">短发男</div>
+          <div class="char-svg">
+            <div class="ch eamin">
+              <div class="c-hair"></div>
+              <div class="c-face"></div>
+              <div class="c-eye left"></div>
+              <div class="c-eye right"></div>
+              <div class="c-mouth"></div>
+              <div class="c-body"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="char-card" data-id="j">
+          <div class="name">J</div>
+          <div class="role">长发女</div>
+          <div class="char-svg">
+            <div class="ch j">
+              <div class="c-hair"></div>
+              <div class="c-face"></div>
+              <div class="c-eye left"></div>
+              <div class="c-eye right"></div>
+              <div class="c-mouth"></div>
+              <div class="c-body"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="char-card" data-id="andy">
+          <div class="name">Andy</div>
+          <div class="role">半圆发少女</div>
+          <div class="char-svg">
+            <div class="ch andy">
+              <div class="c-hair"></div>
+              <div class="c-face"></div>
+              <div class="c-eye left"></div>
+              <div class="c-eye right"></div>
+              <div class="c-mouth"></div>
+              <div class="c-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dice-wrap">
+        <div class="dice face-1" id="dice">
+          <div class="dot"></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="roll-btn" id="rollBtn">摇骰子</button>
+      </div>
+
+      <div class="result" id="result"></div>
+    </div>
+
+    <script>
+      const members = ["eamin", "j", "andy"];
+      const displayNames = { eamin: "Eamin", j: "J", andy: "Andy" };
+
+      // 1-2 → eamin, 3-4 → j, 5-6 → andy
+      function rollToId(n) {
+        if (n <= 2) return "eamin";
+        if (n <= 4) return "j";
+        return "andy";
+      }
+
+      const cards = {
+        eamin: document.querySelector('[data-id="eamin"]'),
+        j: document.querySelector('[data-id="j"]'),
+        andy: document.querySelector('[data-id="andy"]'),
+      };
+
+      const dice = document.getElementById("dice");
+      const rollBtn = document.getElementById("rollBtn");
+      const resultEl = document.getElementById("result");
+
+      let running = false;
+
+      function setDiceFace(n) {
+        // 先清空
+        dice.className = "dice face-" + n;
+        dice.innerHTML = "";
+        for (let i = 0; i < n; i++) {
+          const d = document.createElement("div");
+          d.className = "dot";
+          dice.appendChild(d);
+        }
+      }
+
+      function setNamesOffset(id) {
+        // 用 transform 让两个不被孤立的向中间靠
+        // 计算每张卡片当前位置
+        const positions = {
+          eamin: -1, // 左
+          j: 0,     // 中
+          andy: 1,  // 右
+        };
+        const target = positions[id];
+        members.forEach((mid) => {
+          if (mid === id) {
+            cards[mid].classList.add("isolated", "sad");
+            cards[mid].style.transform = ""; // 由 .isolated class 决定
+          } else {
+            cards[mid].classList.remove("isolated", "sad");
+            // 让两个未被孤立的向 id 的反方向靠拢
+            // 也就是向未被孤立两人中间靠
+            // 简化：如果 id 是 eamin (左)，那 j 和 andy 向左靠拢
+            // 如果 id 是 andy (右)，那 eamin 和 j 向右靠拢
+            // 如果 id 是 j (中)，那 eamin 向左下，andy 向右下
+            const dx = positions[mid] - target;
+            cards[mid].style.transform =
+              dx === 0
+                ? ""
+                : `translateX(${-dx * 50}px)`;
+          }
+        });
+      }
+
+      function reset() {
+        members.forEach((id) => {
+          cards[id].classList.remove("isolated", "sad");
+          cards[id].style.transform = "";
+        });
+        resultEl.classList.remove("show");
+        resultEl.innerHTML = "";
+        setDiceFace(1);
+      }
+
+      function rollDice() {
+        if (running) return;
+        running = true;
+        rollBtn.disabled = true;
+        rollBtn.textContent = "摇骰子中…";
+        reset();
+
+        const final = 1 + Math.floor(Math.random() * 6);
+        let elapsed = 0;
+        const spinDuration = 1800;
+        const tickMs = 80;
+
+        const h = setInterval(() => {
+          elapsed += tickMs;
+          const fake = 1 + Math.floor(Math.random() * 6);
+          setDiceFace(fake);
+          if (elapsed >= spinDuration) {
+            clearInterval(h);
+            dice.classList.remove("spin");
+            setTimeout(() => {
+              setDiceFace(final);
+              const victim = rollToId(final);
+              setTimeout(() => {
+                setNamesOffset(victim);
+                setTimeout(() => {
+                  showResult(victim);
+                }, 900);
+              }, 200);
+            }, 50);
+          }
+        }, tickMs);
+
+        dice.classList.add("spin");
+      }
+
+      function showResult(victim) {
+        resultEl.innerHTML = `被孤立的是 <span class="big">${displayNames[victim]}</span>！`;
+        resultEl.classList.add("show");
+        speak(`被孤立的是 ${displayNames[victim]}`);
+        rollBtn.disabled = false;
+        rollBtn.textContent = "再来一次";
+        running = false;
+      }
+
+      function speak(text) {
+        if (!("speechSynthesis" in window)) return;
+        try {
+          speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(text);
+          u.lang = "zh-CN";
+          u.rate = 1.0;
+          u.pitch = 1.0;
+          speechSynthesis.speak(u);
+        } catch (e) {}
+      }
+
+      rollBtn.addEventListener("click", rollDice);
+
+      // 初始骰子
+      setDiceFace(1);
+    </script>
+  </body>
+</html>

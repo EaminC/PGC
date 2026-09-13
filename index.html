@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PGC · 角色选择</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #eef3f8, #dfe8f0);
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+        color: #37474f;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 22px;
+        padding: 32px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      h1 {
+        text-align: center;
+        margin: 0 0 6px;
+        font-size: 26px;
+        color: #37474f;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #78909c;
+        font-size: 13px;
+        margin-bottom: 28px;
+      }
+
+      .tree {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+      }
+
+      /* 根节点 */
+      .node.root {
+        padding: 16px 32px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #ffd6bd, #ffe5d0);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        font-weight: 700;
+        font-size: 18px;
+        position: relative;
+        cursor: not-allowed;
+        opacity: 0.95;
+      }
+
+      .node .role {
+        display: block;
+        font-size: 12px;
+        color: #a34c4c;
+        font-weight: 500;
+        margin-top: 2px;
+      }
+
+      /* 连线 */
+      .connector {
+        width: 2px;
+        height: 24px;
+        background: #cfd8dc;
+      }
+
+      .level {
+        display: flex;
+        justify-content: center;
+        gap: 60px;
+        width: 100%;
+        position: relative;
+      }
+
+      .level::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 25%;
+        right: 25%;
+        height: 2px;
+        background: #cfd8dc;
+      }
+
+      .branch {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        position: relative;
+        flex: 0 0 auto;
+      }
+
+      .branch::before {
+        content: "";
+        position: absolute;
+        top: -24px;
+        left: 50%;
+        width: 2px;
+        height: 24px;
+        background: #cfd8dc;
+      }
+
+      .org-badge {
+        padding: 8px 22px;
+        background: #37474f;
+        color: #fff;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 1px;
+      }
+
+      .characters {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .char-card {
+        width: 140px;
+        padding: 14px 10px 12px;
+        border-radius: 18px;
+        background: #f5f7f9;
+        text-align: center;
+        text-decoration: none;
+        color: #37474f;
+        font-weight: 600;
+        font-size: 14px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s, box-shadow 0.2s;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .char-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+      }
+
+      .char-card .char-svg {
+        width: 90px;
+        height: 110px;
+        margin: 0 auto 8px;
+        position: relative;
+      }
+
+      .char-card .char-name {
+        font-size: 15px;
+      }
+
+      .char-card .char-role {
+        display: block;
+        font-size: 11px;
+        color: #78909c;
+        font-weight: 500;
+        margin-top: 2px;
+      }
+
+      /* === Mini 角色（用 div + absolute 拼） === */
+      .mini {
+        position: absolute;
+        inset: 0;
+      }
+
+      .mini .m-hair {
+        position: absolute;
+        z-index: 3;
+      }
+
+      .mini .m-face {
+        position: absolute;
+        width: 56px;
+        height: 62px;
+        background: #ffd6bd;
+        border-radius: 48% 48% 45% 45%;
+        z-index: 4;
+        left: 50%;
+        top: 30px;
+        transform: translateX(-50%);
+      }
+
+      .mini .m-eye {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        background: #333;
+        border-radius: 50%;
+        top: 56px;
+        z-index: 5;
+      }
+      .mini .m-eye.left {
+        left: calc(50% - 12px);
+      }
+      .mini .m-eye.right {
+        right: calc(50% - 12px);
+      }
+
+      .mini .m-mouth {
+        position: absolute;
+        width: 14px;
+        height: 6px;
+        border-bottom: 2px solid #a34c4c;
+        border-radius: 0 0 50% 50%;
+        left: 50%;
+        top: 70px;
+        transform: translateX(-50%);
+        z-index: 5;
+      }
+
+      .mini .m-body {
+        position: absolute;
+        width: 70px;
+        height: 50px;
+        border-radius: 25px 25px 18px 18px;
+        left: 50%;
+        top: 90px;
+        transform: translateX(-50%);
+        z-index: 2;
+      }
+
+      /* Eamin：短发男，深蓝衣 */
+      .mini.eamin .m-hair {
+        width: 64px;
+        height: 22px;
+        background: #1a1a1a;
+        border-radius: 32px 32px 8px 8px;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .mini.eamin .m-body {
+        background: #455a64;
+      }
+
+      /* J：长发女，粉衣 */
+      .mini.j .m-hair {
+        width: 80px;
+        height: 90px;
+        background: #3a2418;
+        border-radius: 40px 40px 20px 20px;
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .mini.j .m-hair::before,
+      .mini.j .m-hair::after {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 50px;
+        background: #3a2418;
+        bottom: -28px;
+        border-radius: 0 0 12px 12px;
+      }
+      .mini.j .m-hair::before {
+        left: 2px;
+      }
+      .mini.j .m-hair::after {
+        right: 2px;
+      }
+      .mini.j .m-body {
+        background: #f48fb1;
+      }
+
+      /* Andy：半圆发，黄衣 */
+      .mini.andy .m-hair {
+        width: 64px;
+        height: 50px;
+        background: #6e4426;
+        border-radius: 50% 50% 18px 18px;
+        top: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .mini.andy .m-hair::before,
+      .mini.andy .m-hair::after {
+        content: "";
+        position: absolute;
+        width: 14px;
+        height: 26px;
+        background: #6e4426;
+        bottom: -8px;
+        border-radius: 0 0 10px 10px;
+      }
+      .mini.andy .m-hair::before {
+        left: 0;
+      }
+      .mini.andy .m-hair::after {
+        right: 0;
+      }
+      .mini.andy .m-body {
+        background: #ffb74d;
+      }
+
+      /* ABB：和原版同款半圆发 */
+      .mini.abb .m-hair {
+        width: 64px;
+        height: 50px;
+        background: #25252b;
+        border-radius: 50% 50% 18px 18px;
+        top: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .mini.abb .m-hair::before,
+      .mini.abb .m-hair::after {
+        content: "";
+        position: absolute;
+        width: 14px;
+        height: 26px;
+        background: #25252b;
+        bottom: -8px;
+        border-radius: 0 0 10px 10px;
+      }
+      .mini.abb .m-hair::before {
+        left: 0;
+      }
+      .mini.abb .m-hair::after {
+        right: 0;
+      }
+      .mini.abb .m-body {
+        background: #6b8fd6;
+      }
+
+      /* Yanzhi 节点悬停显示 To Be Coming */
+      .tbc {
+        position: absolute;
+        bottom: -32px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(55, 71, 79, 0.92);
+        color: #fff;
+        padding: 5px 12px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 500;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+      }
+
+      .node.root:hover .tbc {
+        opacity: 1;
+      }
+
+      .node.root .tbc::after {
+        content: "";
+        position: absolute;
+        top: -4px;
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg);
+        width: 8px;
+        height: 8px;
+        background: rgba(55, 71, 79, 0.92);
+      }
+
+      /* 移动端 */
+      @media (max-width: 600px) {
+        body {
+          padding: 12px;
+        }
+        .container {
+          padding: 18px;
+        }
+        h1 {
+          font-size: 20px;
+        }
+        .level {
+          flex-direction: column;
+          gap: 32px;
+        }
+        .level::before {
+          display: none;
+        }
+        .branch::before {
+          top: -16px;
+          height: 16px;
+        }
+        .characters {
+          gap: 12px;
+        }
+        .char-card {
+          width: 100px;
+          padding: 10px 6px;
+        }
+        .char-card .char-svg {
+          width: 70px;
+          height: 90px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>PGC 组织架构</h1>
+      <div class="subtitle">选一个角色进入游戏</div>
+
+      <div class="tree">
+        <div class="node root">
+          砚之
+          <span class="role">PGC 老大</span>
+          <div class="tbc">To Be Coming</div>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="level">
+          <div class="branch">
+            <div class="org-badge">Follow</div>
+            <div class="characters">
+              <a class="char-card" href="Follow/test.html">
+                <div class="char-svg">
+                  <div class="mini abb">
+                    <div class="m-hair"></div>
+                    <div class="m-face"></div>
+                    <div class="m-eye left"></div>
+                    <div class="m-eye right"></div>
+                    <div class="m-mouth"></div>
+                    <div class="m-body"></div>
+                  </div>
+                </div>
+                <div class="char-name">ABB</div>
+                <span class="char-role">Follow 老大</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="branch">
+            <div class="org-badge">OGC</div>
+            <div class="characters">
+              <a class="char-card" href="OGC/index.html">
+                <div class="char-svg">
+                  <div class="mini eamin">
+                    <div class="m-hair"></div>
+                    <div class="m-face"></div>
+                    <div class="m-eye left"></div>
+                    <div class="m-eye right"></div>
+                    <div class="m-mouth"></div>
+                    <div class="m-body"></div>
+                  </div>
+                </div>
+                <div class="char-name">Eamin</div>
+                <span class="char-role">短发男</span>
+              </a>
+              <a class="char-card" href="OGC/index.html">
+                <div class="char-svg">
+                  <div class="mini j">
+                    <div class="m-hair"></div>
+                    <div class="m-face"></div>
+                    <div class="m-eye left"></div>
+                    <div class="m-eye right"></div>
+                    <div class="m-mouth"></div>
+                    <div class="m-body"></div>
+                  </div>
+                </div>
+                <div class="char-name">J</div>
+                <span class="char-role">长发女</span>
+              </a>
+              <a class="char-card" href="OGC/index.html">
+                <div class="char-svg">
+                  <div class="mini andy">
+                    <div class="m-hair"></div>
+                    <div class="m-face"></div>
+                    <div class="m-eye left"></div>
+                    <div class="m-eye right"></div>
+                    <div class="m-mouth"></div>
+                    <div class="m-body"></div>
+                  </div>
+                </div>
+                <div class="char-name">Andy</div>
+                <span class="char-role">半圆发少女</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

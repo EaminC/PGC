@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OGC · 游戏选择</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #eef3f8, #dfe8f0);
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+        color: #37474f;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 22px;
+        padding: 32px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+
+      .back {
+        text-decoration: none;
+        color: #607d8b;
+        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 10px;
+        background: #eceff1;
+        transition: background 0.15s;
+      }
+      .back:hover {
+        background: #cfd8dc;
+      }
+
+      h1 {
+        text-align: center;
+        margin: 0 0 6px;
+        font-size: 26px;
+        color: #37474f;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #78909c;
+        font-size: 13px;
+        margin-bottom: 26px;
+      }
+
+      .members {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-bottom: 26px;
+      }
+
+      .member {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px 8px 8px;
+        background: #f5f7f9;
+        border-radius: 28px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .member .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .games {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .game-tile {
+        background: #f5f7f9;
+        border-radius: 18px;
+        padding: 24px 18px;
+        text-align: center;
+        text-decoration: none;
+        color: #37474f;
+        font-weight: 600;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+      }
+
+      .game-tile:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+      }
+
+      .game-tile .icon {
+        font-size: 36px;
+        margin-bottom: 6px;
+      }
+
+      .game-tile .title {
+        font-size: 17px;
+        margin-bottom: 4px;
+      }
+
+      .game-tile .desc {
+        font-size: 12px;
+        color: #78909c;
+        font-weight: 400;
+        line-height: 1.5;
+      }
+
+      /* mini avatar 复用 index.html 的配色 */
+      .av-eamin {
+        background: #455a64;
+      }
+      .av-eamin::after {
+        content: "";
+        position: absolute;
+        width: 22px;
+        height: 8px;
+        background: #1a1a1a;
+        border-radius: 11px 11px 4px 4px;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .av-j {
+        background: #f48fb1;
+      }
+      .av-j::after {
+        content: "";
+        position: absolute;
+        width: 26px;
+        height: 24px;
+        background: #3a2418;
+        border-radius: 13px 13px 6px 6px;
+        top: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .av-andy {
+        background: #ffb74d;
+      }
+      .av-andy::after {
+        content: "";
+        position: absolute;
+        width: 22px;
+        height: 16px;
+        background: #6e4426;
+        border-radius: 50% 50% 6px 6px;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .av-andy::before {
+        content: "";
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #ffd6bd;
+        border-radius: 50%;
+        top: 13px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding: 12px;
+        }
+        .container {
+          padding: 18px;
+        }
+        h1 {
+          font-size: 20px;
+        }
+        .games {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <a class="back" href="../index.html">← 返回选人</a>
+        <span></span>
+      </div>
+
+      <h1>OGC 三人组</h1>
+      <div class="subtitle">选一个游戏</div>
+
+      <div class="members">
+        <div class="member"><span class="avatar av-eamin"></span>Eamin</div>
+        <div class="member"><span class="avatar av-j"></span>J</div>
+        <div class="member"><span class="avatar av-andy"></span>Andy</div>
+      </div>
+
+      <div class="games">
+        <a class="game-tile" href="apology.html">
+          <div class="icon">🙇</div>
+          <div class="title">互相道歉</div>
+          <div class="desc">
+            三人轮流语音道歉<br />随机过程中错误值累加<br />最后最多的是错的人
+          </div>
+        </a>
+        <a class="game-tile" href="isolation.html">
+          <div class="icon">🎲</div>
+          <div class="title">孤立</div>
+          <div class="desc">
+            摇骰子决定谁被孤立<br />没被孤立的会走到一起<br />显示「被孤立的是 xxx！」
+          </div>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>
