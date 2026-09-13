@@ -131,16 +131,26 @@
         }
 
         function setNamesOffset(id) {
+          // 手机上 stage 已经竖排（ogc.css @700px），必须用 translateY
+          // 桌面仍是横排，用 translateX
+          const isMobile =
+            typeof window.matchMedia === "function" &&
+            window.matchMedia("(max-width: 700px)").matches;
           const positions = { eamin: -1, j: 0, andy: 1 };
           const target = positions[id];
+          const prop = isMobile ? "translateY" : "translateX";
+          const amount = isMobile ? 28 : 46;
+
           members.forEach((mid) => {
             if (mid === id) {
               cards[mid].classList.add("isolated", "sad");
               cards[mid].style.transform = "";
             } else {
               cards[mid].classList.remove("isolated", "sad");
-              const dx = positions[mid] - target;
-              cards[mid].style.transform = dx === 0 ? "" : `translateX(${-dx * 50}px)`;
+              // 把非受害者推向远离受害者的方向（+dx，原来 -dx 是反的）
+              const direction = Math.sign(positions[mid] - target);
+              cards[mid].style.transform =
+                direction === 0 ? "" : `${prop}(${direction * amount}px)`;
             }
           });
         }

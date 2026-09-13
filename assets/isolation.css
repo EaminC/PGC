@@ -125,3 +125,36 @@
 .result .big {
   color: #c0392b;
 }
+
+/* === Mobile：3 卡竖排，紧凑 ===
+ * ogc.css 已经把 stage 改成 column，但 130×170 svg × 3 占太多高度
+ * 这里再压一档到 110×140，比例 ≈ 0.85
+ */
+@media (max-width: 700px) {
+  .stage {
+    gap: 10px;
+    padding: 8px 0 16px;
+    min-height: auto;
+  }
+  .char-card .name {
+    font-size: 14px;
+  }
+  .char-card .role {
+    font-size: 10px;
+  }
+  .char-svg {
+    width: 110px;
+    height: 140px;
+  }
+  .ch .c-face { top: 30px; width: 58px; height: 64px; }
+  .ch .c-eye { top: 58px; width: 5px; height: 5px; }
+  .ch .c-mouth { top: 76px; width: 15px; height: 7px; }
+  .ch .c-body { top: 96px; width: 70px; height: 50px; }
+  .ch.eamin .c-hair { top: 24px; width: 64px; height: 22px; }
+  .ch.j .c-hair { top: 16px; width: 82px; height: 92px; }
+  .ch.j .c-hair::before,
+  .ch.j .c-hair::after { width: 15px; height: 52px; bottom: -32px; }
+  .ch.andy .c-hair { top: 24px; width: 66px; height: 50px; }
+  .ch.andy .c-hair::before,
+  .ch.andy .c-hair::after { width: 15px; height: 26px; bottom: -8px; }
+}
