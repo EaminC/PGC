@@ -20,6 +20,8 @@
     j: { pitch: 1.3, rate: 1.0, voiceHint: "female" },
     // 年轻女：pitch 更高、rate 略快
     andy: { pitch: 1.45, rate: 1.05, voiceHint: "female-young" },
+    // 男（中发）：比 eamin 略亮、节奏正常 — Follow 的播报员
+    wangzai: { pitch: 0.95, rate: 1.0, voiceHint: "male" },
   };
 
   // 关键词 → 优先匹配的中文语音名（按平台常见命名）
