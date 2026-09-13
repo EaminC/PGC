@@ -302,6 +302,43 @@
         background: #ffb74d;
       }
 
+      /* 旺仔（Follow大头兵）*/
+      .mini.wangzai .m-hair {
+        width: 48px;
+        height: 22px;
+        background: #5a3a22;
+        border-radius: 24px 24px 8px 8px;
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 3;
+      }
+      .mini.wangzai .m-hair::before {
+        content: "";
+        position: absolute;
+        width: 4px;
+        height: 22px;
+        background: #5a3a22;
+        bottom: -22px;
+        left: 4px;
+        border-radius: 0 0 4px 4px;
+        z-index: 3;
+      }
+      .mini.wangzai .m-hair::after {
+        content: "";
+        position: absolute;
+        width: 4px;
+        height: 22px;
+        background: #5a3a22;
+        bottom: -22px;
+        right: 4px;
+        border-radius: 0 0 4px 4px;
+        z-index: 3;
+      }
+      .mini.wangzai .m-body {
+        background: #d96363;
+      }
+
       /* === 移动端 === */
       @media (max-width: 480px) {
         body {
@@ -413,6 +450,23 @@
           </div>
           <div class="char-name">Andy</div>
           <div class="char-role">体育大头兵</div>
+        </a>
+
+        <!-- 旺仔 → Follow 号外小游戏 -->
+        <a class="char-card" href="Follow/wangzai.html">
+          <span class="team-tag">Follow</span>
+          <div class="char-svg">
+            <div class="mini wangzai">
+              <div class="m-hair"></div>
+              <div class="m-face"></div>
+              <div class="m-eye left"></div>
+              <div class="m-eye right"></div>
+              <div class="m-mouth"></div>
+              <div class="m-body"></div>
+            </div>
+          </div>
+          <div class="char-name">旺仔</div>
+          <div class="char-role">Follow大头兵</div>
         </a>
       </div>
     </div>

@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📢 旺仔号外 · Follow大头兵</title>
+
+    <!-- 复用 OGC 三人（Eamin / J / Andy）的角色样式 -->
+    <link rel="stylesheet" href="../assets/ogc.css" />
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #fff5f0, #ffe2d6);
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+        color: #37474f;
+      }
+
+      .container {
+        max-width: 720px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.96);
+        border-radius: 22px;
+        padding: 28px 24px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        font-size: 13px;
+      }
+
+      .back {
+        text-decoration: none;
+        color: #607d8b;
+        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 10px;
+        background: #eceff1;
+        transition: background 0.15s;
+      }
+      .back:hover {
+        background: #cfd8dc;
+      }
+
+      h1 {
+        text-align: center;
+        margin: 0 0 4px;
+        font-size: 26px;
+        color: #b23a48;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #78909c;
+        font-size: 13px;
+        margin-bottom: 24px;
+      }
+
+      /* === 旺仔主舞台 === */
+      .stage {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        padding: 12px 0 8px;
+        min-height: 220px;
+      }
+
+      .character {
+        position: relative;
+        width: 110px;
+        height: 150px;
+      }
+
+      .character .hair {
+        position: absolute;
+        width: 72px;
+        height: 36px;
+        background: #5a3a22;
+        border-radius: 36px 36px 12px 12px;
+        top: 22px;
+        left: 19px;
+        z-index: 3;
+      }
+
+      .character .hair::before,
+      .character .hair::after {
+        content: "";
+        position: absolute;
+        width: 6px;
+        height: 36px;
+        background: #5a3a22;
+        bottom: -32px;
+        border-radius: 0 0 5px 5px;
+      }
+      .character .hair::before {
+        left: 6px;
+      }
+      .character .hair::after {
+        right: 6px;
+      }
+
+      .character .face {
+        position: absolute;
+        width: 90px;
+        height: 100px;
+        background: #ffd6bd;
+        border-radius: 48% 48% 45% 45%;
+        left: 10px;
+        top: 38px;
+        z-index: 4;
+        transition: transform 0.25s;
+      }
+
+      .character .eye {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #333;
+        border-radius: 50%;
+        top: 24px;
+        z-index: 5;
+        transition: transform 0.2s, height 0.2s;
+      }
+      .character .eye.left {
+        left: 24px;
+      }
+      .character .eye.right {
+        right: 24px;
+      }
+
+      .character .mouth {
+        position: absolute;
+        width: 22px;
+        height: 10px;
+        border-bottom: 3px solid #a34c4c;
+        border-radius: 0 0 50% 50%;
+        left: 50%;
+        top: 60px;
+        transform: translateX(-50%);
+        z-index: 5;
+        transition: transform 0.2s, height 0.2s;
+      }
+
+      .character .body {
+        position: absolute;
+        width: 110px;
+        height: 80px;
+        background: #d96363;
+        border-radius: 30px 30px 22px 22px;
+        left: 50%;
+        top: 130px;
+        transform: translateX(-50%);
+        z-index: 2;
+      }
+      .character .body::before {
+        content: "";
+        position: absolute;
+        width: 6px;
+        height: 24px;
+        background: #d96363;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%) rotate(20deg);
+        border-radius: 3px;
+      }
+
+      /* === 说话 happy 状态 === */
+      .character.happy .face {
+        transform: translateY(-2px);
+      }
+      .character.happy .eye {
+        height: 4px;
+        transform: translateY(2px);
+      }
+      .character.happy .mouth {
+        height: 14px;
+        background: #a34c4c;
+        border-bottom: none;
+        border-radius: 0 0 50% 50%;
+      }
+
+      /* === 气泡 === */
+      .speech {
+        position: absolute;
+        top: -8px;
+        left: calc(100% + 12px);
+        min-width: 180px;
+        max-width: 320px;
+        padding: 12px 16px;
+        background: #fff;
+        border: 2px solid #d96363;
+        border-radius: 18px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #b23a48;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transform: translateY(8px) scale(0.9);
+        transition: opacity 0.25s, transform 0.25s;
+        z-index: 100;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .speech::after {
+        content: "";
+        position: absolute;
+        bottom: 18px;
+        left: -10px;
+        border-width: 8px 10px 8px 0;
+        border-style: solid;
+        border-color: transparent #d96363 transparent transparent;
+      }
+      .speech::before {
+        content: "";
+        position: absolute;
+        bottom: 20px;
+        left: -6px;
+        border-width: 6px 8px 6px 0;
+        border-style: solid;
+        border-color: transparent #fff transparent transparent;
+        z-index: 1;
+      }
+      .speech.show {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      /* === 输入区 === */
+      .announce-section {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin: 26px auto 0;
+        max-width: 540px;
+        padding: 14px 16px;
+        background: #fff5f0;
+        border-radius: 14px;
+        border: 2px dashed #d96363;
+      }
+
+      .announce-section label {
+        font-size: 14px;
+        font-weight: 700;
+        color: #b23a48;
+        white-space: nowrap;
+      }
+
+      .announce-section input {
+        flex: 1;
+        padding: 9px 12px;
+        font-size: 14px;
+        border: 1px solid #cfd8dc;
+        border-radius: 8px;
+        outline: none;
+        background: #fff;
+        transition: border-color 0.15s;
+      }
+      .announce-section input:focus {
+        border-color: #d96363;
+      }
+      .announce-section input:disabled {
+        background: #eceff1;
+        color: #90a4ae;
+      }
+
+      .announce-section button {
+        padding: 9px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        background: #d96363;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.15s, transform 0.1s;
+      }
+      .announce-section button:hover:not(:disabled) {
+        background: #b23a48;
+      }
+      .announce-section button:active:not(:disabled) {
+        transform: scale(0.95);
+      }
+      .announce-section button:disabled {
+        background: #cfd8dc;
+        cursor: not-allowed;
+      }
+
+      .hint {
+        text-align: center;
+        color: #90a4ae;
+        font-size: 12px;
+        margin-top: 10px;
+      }
+
+      /* === 全员「我们都知道啦」浮窗 === */
+      .allknow-row {
+        display: none;
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%);
+        gap: 18px;
+        padding: 16px 22px 22px;
+        background: rgba(255, 247, 230, 0.97);
+        border: 2px solid #d96363;
+        border-radius: 22px;
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.22);
+        z-index: 1000;
+        animation: allknow-in 0.35s ease-out;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: calc(100vw - 32px);
+      }
+
+      .allknow-row.show {
+        display: flex;
+      }
+
+      .allknow-caption {
+        flex: 1 1 100%;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: #654c00;
+        margin-bottom: 2px;
+      }
+
+      @keyframes allknow-in {
+        from {
+          opacity: 0;
+          transform: translate(-50%, 20px);
+        }
+        to {
+          opacity: 1;
+          transform: translate(-50%, 0);
+        }
+      }
+
+      /* mini character 共用 */
+      .allknow-row .mini-character {
+        width: 70px;
+        height: 110px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+      }
+      .allknow-row .mini-character .hair {
+        width: 50px;
+        height: 40px;
+        position: absolute;
+        top: 5px;
+        left: 10px;
+        border-radius: 50% 50% 14px 14px;
+      }
+      .allknow-row .mini-character .face {
+        position: absolute;
+        width: 50px;
+        height: 54px;
+        background: #ffd6bd;
+        border-radius: 48% 48% 45% 45%;
+        left: 10px;
+        top: 24px;
+      }
+      .allknow-row .mini-character .eye {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        background: #333;
+        border-radius: 50%;
+        top: 44px;
+      }
+      .allknow-row .mini-character .eye.left { left: 18px; }
+      .allknow-row .mini-character .eye.right { right: 18px; }
+      .allknow-row .mini-character .mouth {
+        position: absolute;
+        width: 14px;
+        height: 7px;
+        border-bottom: 2px solid #a34c4c;
+        border-radius: 0 0 50% 50%;
+        left: 50%;
+        top: 58px;
+        transform: translateX(-50%);
+      }
+      .allknow-row .mini-character .body {
+        position: absolute;
+        width: 58px;
+        height: 38px;
+        border-radius: 22px 22px 14px 14px;
+        left: 6px;
+        top: 76px;
+      }
+
+      .allknow-row .mini-name {
+        margin-top: 4px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #5d4037;
+      }
+
+      /* ABB mini */
+      .allknow-row .mini-character.abb {
+        transform: scale(0.85);
+      }
+      .allknow-row .mini-character.abb .hair { background: #25252b; }
+      .allknow-row .mini-character.abb .body { background: #6b8fd6; }
+
+      /* 旺仔 mini */
+      .allknow-row .mini-character.wangzai {
+        transform: scale(0.85);
+      }
+      .allknow-row .mini-character.wangzai .hair { background: #5a3a22; }
+      .allknow-row .mini-character.wangzai .body { background: #d96363; }
+
+      /* OGC 三人 mini（复用 ogc.css 的色系，重写尺寸） */
+      .allknow-row .mini-character.ogc {
+        width: 60px;
+        height: 100px;
+      }
+      .allknow-row .mini-character.ogc .char-svg {
+        width: 60px;
+        height: 70px;
+        margin: 0;
+        position: relative;
+      }
+      .allknow-row .mini-character.ogc .ch .c-face {
+        width: 32px;
+        height: 36px;
+        top: 16px;
+        left: 50%;
+        margin-left: -16px;
+      }
+      .allknow-row .mini-character.ogc .ch .c-eye {
+        width: 4px;
+        height: 4px;
+        top: 30px;
+      }
+      .allknow-row .mini-character.ogc .ch .c-eye.left { left: 8px; }
+      .allknow-row .mini-character.ogc .ch .c-eye.right { right: 8px; }
+      .allknow-row .mini-character.ogc .ch .c-mouth {
+        width: 14px;
+        height: 6px;
+        top: 40px;
+        left: 50%;
+        margin-left: -7px;
+      }
+      .allknow-row .mini-character.ogc .ch .c-body {
+        width: 42px;
+        height: 28px;
+        top: 50px;
+        left: 50%;
+        margin-left: -21px;
+      }
+
+      .allknow-row .mini-character.ogc.eamin .ch .c-hair {
+        width: 36px;
+        height: 12px;
+        top: 14px;
+        left: 50%;
+        margin-left: -18px;
+        border-radius: 18px 18px 4px 4px;
+      }
+      .allknow-row .mini-character.ogc.j .ch .c-hair {
+        width: 46px;
+        height: 50px;
+        top: 8px;
+        left: 50%;
+        margin-left: -23px;
+        border-radius: 23px 23px 10px 10px;
+      }
+      .allknow-row .mini-character.ogc.j .ch .c-hair::before,
+      .allknow-row .mini-character.ogc.j .ch .c-hair::after {
+        width: 8px;
+        height: 30px;
+        background: #3a2418;
+        bottom: -18px;
+      }
+      .allknow-row .mini-character.ogc.j .ch .c-hair::before { left: 6px; }
+      .allknow-row .mini-character.ogc.j .ch .c-hair::after { right: 6px; }
+      .allknow-row .mini-character.ogc.andy .ch .c-hair {
+        width: 38px;
+        height: 28px;
+        top: 12px;
+        left: 50%;
+        margin-left: -19px;
+        border-radius: 19px 19px 10px 10px;
+      }
+      .allknow-row .mini-character.ogc.andy .ch .c-hair::before,
+      .allknow-row .mini-character.ogc.andy .ch .c-hair::after {
+        width: 8px;
+        height: 14px;
+        background: #6e4426;
+        bottom: -4px;
+      }
+      .allknow-row .mini-character.ogc.andy .ch .c-hair::before { left: 4px; }
+      .allknow-row .mini-character.ogc.andy .ch .c-hair::after { right: 4px; }
+
+      /* 移动端 */
+      @media (max-width: 480px) {
+        body {
+          padding: 14px;
+        }
+        .container {
+          padding: 22px 16px;
+        }
+        h1 {
+          font-size: 22px;
+        }
+        .speech {
+          left: 50%;
+          top: -70px;
+          transform: translateX(-50%) translateY(8px) scale(0.9);
+        }
+        .speech.show {
+          transform: translateX(-50%) translateY(0) scale(1);
+        }
+        .speech::after,
+        .speech::before {
+          left: 50%;
+          bottom: -14px;
+          transform: translateX(-50%) rotate(90deg);
+        }
+        .announce-section {
+          flex-wrap: wrap;
+        }
+        .announce-section input {
+          flex: 1 1 100%;
+          order: 2;
+        }
+        .announce-section button {
+          order: 3;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <a class="back" href="../index.html">← 返回选人</a>
+        <span style="font-size:11px;color:#90a4ae">Follow · 旺仔（Follow大头兵）</span>
+      </div>
+
+      <h1>📢 旺仔号外</h1>
+      <div class="subtitle">Follow大头兵 · 给大家播报一条号外</div>
+
+      <!-- 旺仔主舞台 -->
+      <div class="stage">
+        <div id="wangzai" class="character">
+          <div class="hair"></div>
+          <div class="face">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="mouth"></div>
+          </div>
+          <div class="body"></div>
+        </div>
+
+        <div id="wangzaiSpeech" class="speech">给我一条号外，我来播报</div>
+      </div>
+
+      <div class="announce-section">
+        <label for="announceInput">📢 号外：</label>
+        <input
+          id="announceInput"
+          type="text"
+          placeholder="例：Eamin 涨薪了"
+          maxlength="60"
+        />
+        <button id="announceBtn" type="button">播报</button>
+      </div>
+
+      <div class="hint">输入文字 → 旺仔语音说「号外号外 xxx」→ 全员合唱「我们都知道啦」</div>
+
+      <!-- 全员「我们都知道啦」浮窗：Eamin / J / Andy / ABB / 旺仔 -->
+      <div id="allknowRow" class="allknow-row">
+        <div class="allknow-caption">📢 全员：我们都知道啦！</div>
+
+        <div class="mini-character ogc eamin">
+          <div class="char-svg">
+            <div class="ch eamin">
+              <div class="c-hair"></div>
+              <div class="c-face"></div>
+              <div class="c-eye left"></div>
+              <div class="c-eye right"></div>
+              <div class="c-mouth"></div>
+              <div class="c-body"></div>
+            </div>
+          </div>
+          <div class="mini-name">Eamin</div>
+        </div>
+
+        <div class="mini-character ogc j">
+          <div class="char-svg">
+            <div class="ch j">
+              <div class="c-hair"></div>
+              <div class="c-face"></div>
+              <div class="c-eye left"></div>
+              <div class="c-eye right"></div>
+              <div class="c-mouth"></div>
+              <div class="c-body"></div>
+            </div>
+          </div>
+          <div class="mini-name">J</div>
+        </div>
+
+        <div class="mini-character ogc andy">
+          <div class="char-svg">
+            <div class="ch andy">
+              <div class="c-hair"></div>
+              <div class="c-face"></div>
+              <div class="c-eye left"></div>
+              <div class="c-eye right"></div>
+              <div class="c-mouth"></div>
+              <div class="c-body"></div>
+            </div>
+          </div>
+          <div class="mini-name">Andy</div>
+        </div>
+
+        <div class="mini-character abb">
+          <div class="hair"></div>
+          <div class="face">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="mouth"></div>
+          </div>
+          <div class="body"></div>
+          <div class="mini-name">ABB</div>
+        </div>
+
+        <div class="mini-character wangzai">
+          <div class="hair"></div>
+          <div class="face">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="mouth"></div>
+          </div>
+          <div class="body"></div>
+          <div class="mini-name">旺仔</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/voices.js"></script>
+    <script>
+      const wangzaiElement = document.getElementById("wangzai");
+      const wangzaiSpeechEl = document.getElementById("wangzaiSpeech");
+      const allknowRowEl = document.getElementById("allknowRow");
+      const announceInput = document.getElementById("announceInput");
+      const announceBtn = document.getElementById("announceBtn");
+
+      function showWangzaiSpeech(text) {
+        wangzaiSpeechEl.textContent = text;
+        wangzaiSpeechEl.classList.remove("show");
+        void wangzaiSpeechEl.offsetWidth; // restart transition
+        wangzaiSpeechEl.classList.add("show");
+      }
+
+      function hideWangzaiSpeech() {
+        wangzaiSpeechEl.classList.remove("show");
+      }
+
+      function speakMale(text) {
+        if (window.OGCVoice) {
+          window.OGCVoice.speak(text, "wangzai");
+        }
+      }
+
+      // 估算朗读时长（中文 ~280ms/字 + 600ms 缓冲）
+      function estimateSpeakMs(text) {
+        return Math.max(1200, Math.round(text.length * 280) + 600);
+      }
+
+      let broadcasting = false;
+
+      function announce(text) {
+        if (broadcasting) return;
+        const trimmed = String(text || "").trim();
+        if (!trimmed) {
+          showWangzaiSpeech("号外内容不能为空哦");
+          return;
+        }
+
+        broadcasting = true;
+        announceBtn.disabled = true;
+        announceInput.disabled = true;
+
+        // 1) 旺仔播报语音 + 文字
+        const headline = `号外号外 ${trimmed}`;
+        showWangzaiSpeech(headline);
+        wangzaiElement.classList.remove("sad");
+        wangzaiElement.classList.add("happy");
+        if (window.OGCVoice) window.OGCVoice.clearSpeech();
+        speakMale(headline);
+
+        // 2) 播完后，全员合唱「我们都知道啦」
+        setTimeout(() => {
+          showAllKnow();
+        }, estimateSpeakMs(headline));
+      }
+
+      function showAllKnow() {
+        allknowRowEl.classList.add("show");
+
+        wangzaiElement.classList.remove("sad");
+        wangzaiElement.classList.add("happy");
+        showWangzaiSpeech("我们都知道啦！");
+
+        // 全员按顺序说「我们都知道啦」（每个用自己的声线）
+        if (window.OGCVoice) {
+          window.OGCVoice.clearSpeech();
+          window.OGCVoice.queueSpeak("我们都知道啦", "eamin");
+          window.OGCVoice.queueSpeak("我们都知道啦", "j");
+          window.OGCVoice.queueSpeak("我们都知道啦", "andy");
+          window.OGCVoice.queueSpeak("我们都知道啦", "abb");
+          window.OGCVoice.queueSpeak("我们都知道啦", "wangzai");
+        }
+
+        // 5 句串讲约 4-5s，留余量
+        setTimeout(() => {
+          allknowRowEl.classList.remove("show");
+          wangzaiElement.classList.remove("happy");
+          hideWangzaiSpeech();
+          broadcasting = false;
+          announceBtn.disabled = false;
+          announceInput.disabled = false;
+          announceInput.value = "";
+          announceInput.focus();
+        }, 4500);
+      }
+
+      // 绑定
+      if (announceBtn) {
+        announceBtn.addEventListener("click", () => {
+          announce(announceInput.value);
+        });
+      }
+      if (announceInput) {
+        announceInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            announce(announceInput.value);
+          }
+        });
+        announceInput.focus();
+      }
+    </script>
+  </body>
+</html>
