@@ -556,6 +556,33 @@
    号外播报区
 ===================================================== */
 
+      .role-divider {
+        margin: 36px auto 22px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        max-width: 720px;
+        color: #90a4ae;
+      }
+
+      .role-divider-line {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          #cfd8dc,
+          transparent
+        );
+      }
+
+      .role-divider-text {
+        font-size: 13px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+
       .wangzai-area {
         flex: 0 0 320px;
         width: 320px;
@@ -1125,10 +1152,18 @@
       <div class="hint">纵轴范围 −0.9% ～ +0.9%，超过 ±0.3% 进入显著状态</div>
 
       <!-- =================================================
-   号外播报员：旺仔
-   输入文字 → 旺仔语音说「号外号外 xxx」
-   然后 ABB + 旺仔 一起说「我们都知道啦」
+   单独角色：旺仔（Follow大头兵）
+   和 ABB 完全独立，不互相影响。
+   用法和 ABB 一样：是一个有名字、有外形、有专属反应的角色。
+   输入文字 → 旺仔语音播报「号外号外 xxx」
+   播完后他自己再表示「大家都已经知道了」
 ================================================= -->
+
+      <div class="role-divider">
+        <span class="role-divider-line"></span>
+        <span class="role-divider-text">— 单独角色 · 旺仔（Follow大头兵）—</span>
+        <span class="role-divider-line"></span>
+      </div>
 
       <div class="wangzai-area">
         <div id="wangzai" class="character wangzai">
@@ -1159,19 +1194,8 @@
         </div>
       </div>
 
-      <!-- 所有角色 popup：他们都"知道了" -->
+      <!-- 旺仔自己的「大家都已经知道了」反应弹窗（只显示旺仔，不带 ABB） -->
       <div id="allknowRow" class="allknow-row">
-        <div class="mini-character abb">
-          <div class="hair"></div>
-          <div class="face">
-            <div class="eye left"></div>
-            <div class="eye right"></div>
-            <div class="mouth"></div>
-          </div>
-          <div class="body"></div>
-          <div class="laptop"></div>
-          <div class="mini-name">ABB</div>
-        </div>
         <div class="mini-character wangzai">
           <div class="hair"></div>
           <div class="face">
@@ -2243,7 +2267,7 @@
       }
 
       /* =====================================================
-   号外播报员：旺仔
+   号外播报员：旺仔（独立角色，不影响 ABB）
 ===================================================== */
 
       const wangzaiElement = document.getElementById("wangzai");
@@ -2271,7 +2295,7 @@
         }
       }
 
-      // 估算朗读时长（ms），用于决定何时显示"我们都知道啦"
+      // 估算朗读时长（ms）
       // 中文每字 ~280ms / rate，再加 600ms 缓冲
       function estimateSpeakMs(text) {
         const rate = 1.0;
@@ -2289,7 +2313,7 @@
         announceBtn.disabled = true;
         announceInput.disabled = true;
 
-        // 1) 旺仔的播报语音 + 文字
+        // 1) 旺仔播报语音 + 文字
         const headline = `号外号外 ${trimmed}`;
         showWangzaiSpeech(headline);
         wangzaiElement.classList.remove("sad");
@@ -2297,41 +2321,32 @@
         if (window.OGCVoice) window.OGCVoice.clearSpeech();
         speakMale(headline);
 
-        // 2) 等语音播完，触发"我们都知道啦"
+        // 2) 播完后，旺仔自己反应（"大家都已经知道了"）
+        //    ABB 不参与，旺仔是单独角色
         setTimeout(() => {
           showAllKnow();
         }, estimateSpeakMs(headline));
       }
 
       function showAllKnow() {
-        // 弹出所有角色 mini 行
+        // 只显示旺仔，弹出他自己表示"大家都已经知道了"
         allknowRowEl.classList.add("show");
-
-        // 所有角色反应：开心 + 各自说"我们都知道啦"
-        characterElement.classList.remove("sad");
-        characterElement.classList.add("happy");
-        showSpeech("我们都知道啦！");
 
         wangzaiElement.classList.remove("sad");
         wangzaiElement.classList.add("happy");
-        showWangzaiSpeech("我们都知道啦！");
+        showWangzaiSpeech("大家都已经知道了！");
 
-        // 两人先后说，避免同时发声重叠
-        if (window.OGCVoice) {
-          window.OGCVoice.queueSpeak("我们都知道啦", "j"); // ABB 用女声近似
-        }
+        // 只让旺仔自己说，不调动 ABB
         setTimeout(() => {
           if (window.OGCVoice) {
-            window.OGCVoice.queueSpeak("我们都知道啦", "wangzai");
+            window.OGCVoice.speak("大家都已经知道了", "wangzai");
           }
-        }, 600);
+        }, 200);
 
-        // 2.5s 后消失
+        // ~2.6s 后消失
         setTimeout(() => {
           allknowRowEl.classList.remove("show");
-          characterElement.classList.remove("happy");
           wangzaiElement.classList.remove("happy");
-          hideSpeech();
           hideWangzaiSpeech();
           broadcasting = false;
           announceBtn.disabled = false;
