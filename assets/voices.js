@@ -86,7 +86,11 @@
     const profile = PROFILES[profileId] || { pitch: 1.0, rate: 1.0 };
 
     try {
+      // cancel 模式：打断一切，包括排队的指责
       window.speechSynthesis.cancel();
+      speechQueue.length = 0;
+      speaking = false;
+
       const u = new SpeechSynthesisUtterance(String(text));
       u.lang = "zh-CN";
       u.pitch = profile.pitch;
@@ -100,6 +104,50 @@
     }
   }
 
+  // 排队播报：不打断正在播放的语音，按入队顺序逐条播放
+  const speechQueue = [];
+  let speaking = false;
+
+  function processQueue() {
+    if (!speechQueue.length) {
+      speaking = false;
+      return;
+    }
+    speaking = true;
+    const { text, profile } = speechQueue.shift();
+    try {
+      const u = new SpeechSynthesisUtterance(String(text));
+      u.lang = "zh-CN";
+      u.pitch = profile.pitch;
+      u.rate = profile.rate;
+      const v = pickVoice(profile.voiceHint);
+      if (v) u.voice = v;
+      const advance = () => setTimeout(processQueue, 40);
+      u.onend = advance;
+      u.onerror = advance;
+      window.speechSynthesis.speak(u);
+    } catch (e) {
+      setTimeout(processQueue, 40);
+    }
+  }
+
+  function queueSpeak(text, profileId, overrides) {
+    if (!("speechSynthesis" in window)) return;
+    const base = PROFILES[profileId] || { pitch: 1.0, rate: 1.0 };
+    const profile =
+      overrides && typeof overrides === "object"
+        ? Object.assign({}, base, overrides)
+        : base;
+    speechQueue.push({ text: String(text), profile });
+    if (!speaking) processQueue();
+  }
+
+  function clearSpeech() {
+    speechQueue.length = 0;
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    speaking = false;
+  }
+
   // 首次预热 + 监听 voiceschanged（Chrome 需要）
   if ("speechSynthesis" in window) {
     loadVoices();
@@ -108,5 +156,5 @@
     }
   }
 
-  window.OGCVoice = { speak, PROFILES, pickVoice };
+  window.OGCVoice = { speak, queueSpeak, clearSpeech, PROFILES, pickVoice };
 })();

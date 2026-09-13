@@ -186,6 +186,20 @@
           }
         }
 
+        function queueAccuse(victim) {
+          if (!window.OGCVoice) return;
+          // 报错时三人轮流很快地说「都是 xxx 不好」
+          // 不算受害者，三人指责受害者；rate 拉到 1.5，听起来像在吵
+          const accusers = members.filter((id) => id !== victim);
+          const text = "都是 " + displayNames[victim] + " 不好";
+          accusers.forEach((id, idx) => {
+            // 微小错开避免完全同帧入队
+            setTimeout(() => {
+              window.OGCVoice.queueSpeak(text, id, { rate: 1.5 });
+            }, idx * 80);
+          });
+        }
+
         function pickRandomId() {
           return members[Math.floor(Math.random() * members.length)];
         }
@@ -195,6 +209,8 @@
           running = true;
           startBtn.disabled = true;
           startBtn.textContent = "进行中…";
+          // 清掉上一局残留的语音排队
+          if (window.OGCVoice) window.OGCVoice.clearSpeech();
           resetAll();
 
           const duration = 5000;
@@ -206,6 +222,7 @@
             mistakes[victim] += 1;
             setCount(victim, mistakes[victim]);
             triggerAnim(victim);
+            queueAccuse(victim);
 
             if (elapsed + tick >= duration) {
               clearInterval(handle);
@@ -215,6 +232,8 @@
         }
 
         function playApologyPhase() {
+          // 切到道歉阶段：把还没播完的指责清掉，进入单人 cancel 模式
+          if (window.OGCVoice) window.OGCVoice.clearSpeech();
           let i = 0;
           function next() {
             if (i >= members.length) {
