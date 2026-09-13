@@ -402,7 +402,6 @@
         border-radius: 22px 22px 14px 14px;
         left: 6px;
         top: 76px;
-      }
 
       .allknow-row .mini-name {
         margin-top: 4px;
@@ -411,19 +410,122 @@
         color: #5d4037;
       }
 
-      /* ABB mini */
+      /* ABB mini（按 OGC mini 同样的 60x100 / 五官位置重做） */
       .allknow-row .mini-character.abb {
-        transform: scale(0.85);
+        width: 60px;
+        height: 100px;
       }
-      .allknow-row .mini-character.abb .hair { background: #25252b; }
-      .allknow-row .mini-character.abb .body { background: #6b8fd6; }
+      .allknow-row .mini-character.abb .hair {
+        width: 38px;
+        height: 14px;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 19px 19px 6px 6px;
+        background: #25252b;
+      }
+      /* ABB 短刘海两边下垂 */
+      .allknow-row .mini-character.abb .hair::before,
+      .allknow-row .mini-character.abb .hair::after {
+        width: 6px;
+        height: 10px;
+        background: #25252b;
+        bottom: -8px;
+      }
+      .allknow-row .mini-character.abb .hair::before { left: 4px; }
+      .allknow-row .mini-character.abb .hair::after { right: 4px; }
+      .allknow-row .mini-character.abb .face {
+        width: 32px;
+        height: 36px;
+        top: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .allknow-row .mini-character.abb .eye {
+        top: 30px;
+        width: 4px;
+        height: 4px;
+      }
+      .allknow-row .mini-character.abb .eye.left { left: 8px; }
+      .allknow-row .mini-character.abb .eye.right { right: 8px; }
+      .allknow-row .mini-character.abb .mouth {
+        width: 14px;
+        height: 6px;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .allknow-row .mini-character.abb .body {
+        width: 42px;
+        height: 28px;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #6b8fd6;
+        border-radius: 20px 20px 12px 12px;
+      }
+      .allknow-row .mini-character.abb .body::before {
+        display: none;
+      }
 
-      /* 旺仔 mini */
+      /* 旺仔 mini（同尺寸 / 不同色：棕中发 + 红衣） */
       .allknow-row .mini-character.wangzai {
-        transform: scale(0.85);
+        width: 60px;
+        height: 100px;
       }
-      .allknow-row .mini-character.wangzai .hair { background: #5a3a22; }
-      .allknow-row .mini-character.wangzai .body { background: #d96363; }
+      .allknow-row .mini-character.wangzai .hair {
+        width: 40px;
+        height: 16px;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 20px 20px 6px 6px;
+        background: #5a3a22;
+      }
+      /* 旺仔中长刘海盖到眉毛，两侧下垂 */
+      .allknow-row .mini-character.wangzai .hair::before,
+      .allknow-row .mini-character.wangzai .hair::after {
+        width: 8px;
+        height: 14px;
+        background: #5a3a22;
+        bottom: -10px;
+        border-radius: 0 0 5px 5px;
+      }
+      .allknow-row .mini-character.wangzai .hair::before { left: 2px; }
+      .allknow-row .mini-character.wangzai .hair::after { right: 2px; }
+      .allknow-row .mini-character.wangzai .face {
+        width: 32px;
+        height: 36px;
+        top: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .allknow-row .mini-character.wangzai .eye {
+        top: 30px;
+        width: 4px;
+        height: 4px;
+      }
+      .allknow-row .mini-character.wangzai .eye.left { left: 8px; }
+      .allknow-row .mini-character.wangzai .eye.right { right: 8px; }
+      .allknow-row .mini-character.wangzai .mouth {
+        width: 14px;
+        height: 6px;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .allknow-row .mini-character.wangzai .body {
+        width: 42px;
+        height: 28px;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #d96363;
+        border-radius: 20px 20px 12px 12px;
+      }
+      .allknow-row .mini-character.wangzai .body::before {
+        display: none;
+      }
 
       /* OGC 三人 mini（复用 ogc.css 的色系，重写尺寸） */
       .allknow-row .mini-character.ogc {
