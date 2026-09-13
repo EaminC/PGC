@@ -20,7 +20,7 @@
       }
 
       .container {
-        max-width: 700px;
+        max-width: 760px;
         margin: 0 auto;
         background: rgba(255, 255, 255, 0.95);
         border-radius: 22px;
@@ -30,7 +30,7 @@
 
       h1 {
         text-align: center;
-        margin: 0 0 6px;
+        margin: 0 0 4px;
         font-size: 24px;
         color: #37474f;
       }
@@ -39,361 +39,381 @@
         text-align: center;
         color: #78909c;
         font-size: 13px;
-        margin-bottom: 28px;
+        margin-bottom: 18px;
       }
 
-      /* === 树状图 === */
-      .tree-wrap {
-        width: 100%;
-        max-width: 540px;
+      /* === Yanzhi 老板条 === */
+      .boss {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 22px;
+      }
+
+      .boss-card {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px 6px 10px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #ffd6bd, #ffe5d0);
+        color: #5d4037;
+        font-weight: 700;
+        font-size: 14px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      }
+
+      .boss-card .badge {
+        background: rgba(55, 71, 79, 0.85);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+
+      /* === 角色网格 === */
+      .chars {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 14px;
+        max-width: 720px;
         margin: 0 auto;
       }
 
-      .tree {
+      .char-card {
         position: relative;
-        width: 100%;
-        height: 0;
-        padding-bottom: 96%; /* 540 × 0.96 ≈ 520，保持比例 */
-      }
-
-      .tree-svg {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 1;
-      }
-
-      .tnode,
-      .tcard {
-        position: absolute;
-        box-sizing: border-box;
-        text-align: center;
-        transform: translate(-50%, 0);
-        z-index: 2;
-      }
-
-      .tnode {
-        padding: 8px 16px;
-        border-radius: 14px;
-        font-weight: 700;
-        font-size: 14px;
-        white-space: nowrap;
-      }
-
-      .tnode.root {
-        background: linear-gradient(135deg, #ffd6bd, #ffe5d0);
-        color: #37474f;
-        font-size: 16px;
-        opacity: 0.95;
-        cursor: not-allowed;
-      }
-
-      .tnode.root .tbc {
-        position: absolute;
-        bottom: -28px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(55, 71, 79, 0.92);
-        color: #fff;
-        padding: 4px 10px;
-        border-radius: 8px;
-        font-size: 11px;
-        font-weight: 500;
-        white-space: nowrap;
-        opacity: 0;
-        transition: opacity 0.2s;
-        pointer-events: none;
-      }
-
-      .tnode.root:hover .tbc {
-        opacity: 1;
-      }
-
-      .tnode.org {
-        background: #37474f;
-        color: #fff;
-      }
-
-      .tnode.sub {
-        background: #607d8b;
-        color: #fff;
-        font-size: 13px;
-      }
-
-      .tcard {
-        display: block;
-        width: 130px;
-        padding: 10px 6px 8px;
-        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px 10px 14px;
+        border-radius: 18px;
         background: #f5f7f9;
         text-decoration: none;
         color: #37474f;
-        font-weight: 600;
-        font-size: 14px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
         cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
+        -webkit-tap-highlight-color: transparent;
       }
 
-      .tcard:hover {
-        transform: translate(-50%, -3px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+      .char-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+        background: #ffffff;
       }
 
-      .tcard .char-svg {
-        width: 70px;
-        height: 86px;
-        margin: 0 auto 4px;
+      .char-card:active {
+        transform: translateY(-1px) scale(0.98);
+      }
+
+      .team-tag {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(55, 71, 79, 0.88);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 999px;
+        letter-spacing: 0.3px;
+      }
+
+      .char-svg {
+        width: 80px;
+        height: 96px;
+        margin: 6px auto 8px;
         position: relative;
       }
 
-      .tcard .char-name {
-        font-size: 14px;
+      .char-name {
+        font-size: 15px;
         font-weight: 700;
+        line-height: 1.2;
       }
 
-      .tcard .char-role {
+      .char-role {
         font-size: 11px;
         color: #607d8b;
         font-weight: 500;
-        margin-top: 1px;
+        margin-top: 2px;
+        min-height: 14px;
       }
 
       /* === Mini 角色（与原版同款 div 拼法） === */
-      .mini { position: absolute; inset: 0; }
+      .mini {
+        position: absolute;
+        inset: 0;
+      }
 
-      .mini .m-hair { position: absolute; z-index: 3; }
+      .mini .m-hair {
+        position: absolute;
+        z-index: 3;
+      }
       .mini .m-face {
         position: absolute;
-        width: 44px; height: 48px;
+        width: 44px;
+        height: 48px;
         background: #ffd6bd;
         border-radius: 48% 48% 45% 45%;
-        left: 50%; top: 24px;
+        left: 50%;
+        top: 24px;
         transform: translateX(-50%);
         z-index: 4;
       }
       .mini .m-eye {
         position: absolute;
-        width: 4px; height: 4px;
+        width: 4px;
+        height: 4px;
         background: #333;
         border-radius: 50%;
-        top: 44px; z-index: 5;
+        top: 44px;
+        z-index: 5;
       }
-      .mini .m-eye.left { left: calc(50% - 10px); }
-      .mini .m-eye.right { right: calc(50% - 10px); }
+      .mini .m-eye.left {
+        left: calc(50% - 10px);
+      }
+      .mini .m-eye.right {
+        right: calc(50% - 10px);
+      }
       .mini .m-mouth {
         position: absolute;
-        width: 11px; height: 5px;
+        width: 11px;
+        height: 5px;
         border-bottom: 2px solid #a34c4c;
         border-radius: 0 0 50% 50%;
-        left: 50%; top: 55px;
+        left: 50%;
+        top: 55px;
         transform: translateX(-50%);
         z-index: 5;
       }
       .mini .m-body {
         position: absolute;
-        width: 56px; height: 40px;
+        width: 56px;
+        height: 40px;
         border-radius: 20px 20px 14px 14px;
-        left: 50%; top: 70px;
+        left: 50%;
+        top: 70px;
         transform: translateX(-50%);
         z-index: 2;
       }
 
       /* ABB */
       .mini.abb .m-hair {
-        width: 50px; height: 40px;
+        width: 50px;
+        height: 40px;
         background: #25252b;
         border-radius: 50% 50% 14px 14px;
-        top: 18px; left: 50%;
+        top: 18px;
+        left: 50%;
         transform: translateX(-50%);
       }
-      .mini.abb .m-hair::before, .mini.abb .m-hair::after {
-        content: ""; position: absolute;
-        width: 11px; height: 20px;
+      .mini.abb .m-hair::before,
+      .mini.abb .m-hair::after {
+        content: "";
+        position: absolute;
+        width: 11px;
+        height: 20px;
         background: #25252b;
-        bottom: -6px; border-radius: 0 0 8px 8px;
+        bottom: -6px;
+        border-radius: 0 0 8px 8px;
       }
-      .mini.abb .m-hair::before { left: 0; }
-      .mini.abb .m-hair::after { right: 0; }
-      .mini.abb .m-body { background: #6b8fd6; }
+      .mini.abb .m-hair::before {
+        left: 0;
+      }
+      .mini.abb .m-hair::after {
+        right: 0;
+      }
+      .mini.abb .m-body {
+        background: #6b8fd6;
+      }
 
       /* Eamin */
       .mini.eamin .m-hair {
-        width: 50px; height: 16px;
+        width: 50px;
+        height: 16px;
         background: #1a1a1a;
         border-radius: 25px 25px 6px 6px;
-        top: 20px; left: 50%;
+        top: 20px;
+        left: 50%;
         transform: translateX(-50%);
       }
-      .mini.eamin .m-body { background: #455a64; }
+      .mini.eamin .m-body {
+        background: #455a64;
+      }
 
       /* J */
       .mini.j .m-hair {
-        width: 62px; height: 70px;
+        width: 62px;
+        height: 70px;
         background: #3a2418;
         border-radius: 31px 31px 14px 14px;
-        top: 14px; left: 50%;
+        top: 14px;
+        left: 50%;
         transform: translateX(-50%);
       }
-      .mini.j .m-hair::before, .mini.j .m-hair::after {
-        content: ""; position: absolute;
-        width: 11px; height: 38px;
+      .mini.j .m-hair::before,
+      .mini.j .m-hair::after {
+        content: "";
+        position: absolute;
+        width: 11px;
+        height: 38px;
         background: #3a2418;
-        bottom: -22px; border-radius: 0 0 10px 10px;
+        bottom: -22px;
+        border-radius: 0 0 10px 10px;
       }
-      .mini.j .m-hair::before { left: 2px; }
-      .mini.j .m-hair::after { right: 2px; }
-      .mini.j .m-body { background: #f48fb1; }
+      .mini.j .m-hair::before {
+        left: 2px;
+      }
+      .mini.j .m-hair::after {
+        right: 2px;
+      }
+      .mini.j .m-body {
+        background: #f48fb1;
+      }
 
       /* Andy */
       .mini.andy .m-hair {
-        width: 52px; height: 38px;
+        width: 52px;
+        height: 38px;
         background: #6e4426;
         border-radius: 50% 50% 14px 14px;
-        top: 18px; left: 50%;
+        top: 18px;
+        left: 50%;
         transform: translateX(-50%);
       }
-      .mini.andy .m-hair::before, .mini.andy .m-hair::after {
-        content: ""; position: absolute;
-        width: 12px; height: 22px;
+      .mini.andy .m-hair::before,
+      .mini.andy .m-hair::after {
+        content: "";
+        position: absolute;
+        width: 12px;
+        height: 22px;
         background: #6e4426;
-        bottom: -8px; border-radius: 0 0 8px 8px;
+        bottom: -8px;
+        border-radius: 0 0 8px 8px;
       }
-      .mini.andy .m-hair::before { left: 0; }
-      .mini.andy .m-hair::after { right: 0; }
-      .mini.andy .m-body { background: #ffb74d; }
+      .mini.andy .m-hair::before {
+        left: 0;
+      }
+      .mini.andy .m-hair::after {
+        right: 0;
+      }
+      .mini.andy .m-body {
+        background: #ffb74d;
+      }
 
-      @media (max-width: 600px) {
-        body { padding: 12px; }
-        .container { padding: 18px 12px; }
-        h1 { font-size: 20px; }
-        .tree-wrap { max-width: 360px; }
-        .tnode { font-size: 12px; padding: 6px 12px; }
-        .tnode.root { font-size: 14px; }
-        .tcard { width: 90px; padding: 8px 4px 6px; }
-        .tcard .char-svg { width: 50px; height: 64px; }
+      /* === 移动端 === */
+      @media (max-width: 480px) {
+        body {
+          padding: 14px;
+        }
+        .container {
+          padding: 22px 16px 20px;
+        }
+        h1 {
+          font-size: 22px;
+        }
+        .chars {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+        }
+        .char-card {
+          padding: 14px 6px 12px;
+        }
+        .char-svg {
+          width: 70px;
+          height: 86px;
+        }
+        .char-name {
+          font-size: 14px;
+        }
+        .team-tag {
+          font-size: 9px;
+          padding: 2px 6px;
+        }
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>PGC 组织架构</h1>
+      <h1>PGC</h1>
       <div class="subtitle">选一个角色进入游戏</div>
 
-      <div class="tree-wrap">
-        <div class="tree">
-          <!-- 连线 SVG（铺在底层，pointer-events: none） -->
-          <svg
-            class="tree-svg"
-            viewBox="0 0 540 520"
-            preserveAspectRatio="xMidYMid meet"
-          >
-            <!-- Yanzhi 底 → L1 横线 -->
-            <line x1="270" y1="50" x2="270" y2="100" stroke="#cfd8dc" stroke-width="2" />
-            <!-- L1 横线：Follow ↔ OGC -->
-            <line x1="120" y1="100" x2="420" y2="100" stroke="#cfd8dc" stroke-width="2" />
-            <!-- Follow → ABB -->
-            <line x1="120" y1="100" x2="120" y2="240" stroke="#cfd8dc" stroke-width="2" />
-            <!-- OGC → tech.com -->
-            <line x1="420" y1="100" x2="420" y2="240" stroke="#cfd8dc" stroke-width="2" />
-            <!-- tech.com → L3 横线 -->
-            <line x1="420" y1="290" x2="420" y2="370" stroke="#cfd8dc" stroke-width="2" />
-            <!-- L3 横线：Eamin ↔ Andy -->
-            <line x1="240" y1="370" x2="420" y2="370" stroke="#cfd8dc" stroke-width="2" />
-            <!-- Eamin / J / Andy 向上接到横线 -->
-            <line x1="240" y1="370" x2="240" y2="430" stroke="#cfd8dc" stroke-width="2" />
-            <line x1="330" y1="370" x2="330" y2="430" stroke="#cfd8dc" stroke-width="2" />
-            <line x1="420" y1="370" x2="420" y2="430" stroke="#cfd8dc" stroke-width="2" />
-          </svg>
-
-          <!-- 节点（绝对定位，居中用 transform: translate(-50%, 0)） -->
-
-          <!-- Yanzhi：center x=270, top y=0 -->
-          <div class="tnode root" style="left: 50%; top: 0; transform: translate(-50%, 0)">
-            Yanzhi
-            <div class="tbc">To Be Coming</div>
-          </div>
-
-          <!-- Follow：center x=120, top y=110 -->
-          <div class="tnode org" style="left: calc(120 / 540 * 100%); top: 110px">
-            Follow
-          </div>
-
-          <!-- OGC：center x=420, top y=110 -->
-          <div class="tnode org" style="left: calc(420 / 540 * 100%); top: 110px">
-            OGC
-          </div>
-
-          <!-- ABB：center x=120, top y=240 -->
-          <a class="tcard" href="Follow/test.html" style="left: calc(120 / 540 * 100%); top: 240px">
-            <div class="char-svg">
-              <div class="mini abb">
-                <div class="m-hair"></div>
-                <div class="m-face"></div>
-                <div class="m-eye left"></div>
-                <div class="m-eye right"></div>
-                <div class="m-mouth"></div>
-                <div class="m-body"></div>
-              </div>
-            </div>
-            <div class="char-name">ABB</div>
-          </a>
-
-          <!-- tech.com：center x=420, top y=250 -->
-          <div class="tnode sub" style="left: calc(420 / 540 * 100%); top: 250px">
-            tech.com
-          </div>
-
-          <!-- Eamin：center x=240, top y=430 -->
-          <a class="tcard" href="OGC/index.html" style="left: calc(240 / 540 * 100%); top: 430px">
-            <div class="char-svg">
-              <div class="mini eamin">
-                <div class="m-hair"></div>
-                <div class="m-face"></div>
-                <div class="m-eye left"></div>
-                <div class="m-eye right"></div>
-                <div class="m-mouth"></div>
-                <div class="m-body"></div>
-              </div>
-            </div>
-            <div class="char-name">Eamin</div>
-            <div class="char-role">影视大头兵</div>
-          </a>
-
-          <!-- J：center x=330, top y=430 -->
-          <a class="tcard" href="OGC/index.html" style="left: calc(330 / 540 * 100%); top: 430px">
-            <div class="char-svg">
-              <div class="mini j">
-                <div class="m-hair"></div>
-                <div class="m-face"></div>
-                <div class="m-eye left"></div>
-                <div class="m-eye right"></div>
-                <div class="m-mouth"></div>
-                <div class="m-body"></div>
-              </div>
-            </div>
-            <div class="char-name">J</div>
-            <div class="char-role">热点大头兵</div>
-          </a>
-
-          <!-- Andy：center x=420, top y=430 -->
-          <a class="tcard" href="OGC/index.html" style="left: calc(420 / 540 * 100%); top: 430px">
-            <div class="char-svg">
-              <div class="mini andy">
-                <div class="m-hair"></div>
-                <div class="m-face"></div>
-                <div class="m-eye left"></div>
-                <div class="m-eye right"></div>
-                <div class="m-mouth"></div>
-                <div class="m-body"></div>
-              </div>
-            </div>
-            <div class="char-name">Andy</div>
-            <div class="char-role">体育大头兵</div>
-          </a>
+      <div class="boss">
+        <div class="boss-card">
+          Yanzhi
+          <span class="badge">待上线</span>
         </div>
+      </div>
+
+      <div class="chars">
+        <!-- ABB → Follow -->
+        <a class="char-card" href="Follow/test.html">
+          <span class="team-tag">Follow</span>
+          <div class="char-svg">
+            <div class="mini abb">
+              <div class="m-hair"></div>
+              <div class="m-face"></div>
+              <div class="m-eye left"></div>
+              <div class="m-eye right"></div>
+              <div class="m-mouth"></div>
+              <div class="m-body"></div>
+            </div>
+          </div>
+          <div class="char-name">ABB</div>
+          <div class="char-role">&nbsp;</div>
+        </a>
+
+        <!-- Eamin → OGC -->
+        <a class="char-card" href="OGC/index.html">
+          <span class="team-tag">OGC</span>
+          <div class="char-svg">
+            <div class="mini eamin">
+              <div class="m-hair"></div>
+              <div class="m-face"></div>
+              <div class="m-eye left"></div>
+              <div class="m-eye right"></div>
+              <div class="m-mouth"></div>
+              <div class="m-body"></div>
+            </div>
+          </div>
+          <div class="char-name">Eamin</div>
+          <div class="char-role">影视大头兵</div>
+        </a>
+
+        <!-- J → OGC -->
+        <a class="char-card" href="OGC/index.html">
+          <span class="team-tag">OGC</span>
+          <div class="char-svg">
+            <div class="mini j">
+              <div class="m-hair"></div>
+              <div class="m-face"></div>
+              <div class="m-eye left"></div>
+              <div class="m-eye right"></div>
+              <div class="m-mouth"></div>
+              <div class="m-body"></div>
+            </div>
+          </div>
+          <div class="char-name">J</div>
+          <div class="char-role">热点大头兵</div>
+        </a>
+
+        <!-- Andy → OGC -->
+        <a class="char-card" href="OGC/index.html">
+          <span class="team-tag">OGC</span>
+          <div class="char-svg">
+            <div class="mini andy">
+              <div class="m-hair"></div>
+              <div class="m-face"></div>
+              <div class="m-eye left"></div>
+              <div class="m-eye right"></div>
+              <div class="m-mouth"></div>
+              <div class="m-body"></div>
+            </div>
+          </div>
+          <div class="char-name">Andy</div>
+          <div class="char-role">体育大头兵</div>
+        </a>
       </div>
     </div>
   </body>
