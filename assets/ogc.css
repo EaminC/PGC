@@ -1,0 +1,364 @@
+/* =========================================================
+ * ogc.css — shared styles for OGC games
+ * Used by: OGC/apology.html, OGC/isolation.html
+ * ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eef3f8, #dfe8f0);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  color: #37474f;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.back {
+  text-decoration: none;
+  color: #607d8b;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: #eceff1;
+  transition: background 0.15s;
+}
+.back:hover {
+  background: #cfd8dc;
+}
+
+h1 {
+  text-align: center;
+  margin: 0 0 4px;
+  font-size: 24px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #78909c;
+  font-size: 13px;
+  margin-bottom: 22px;
+}
+
+/* === Stage === */
+.stage {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 16px 8px 28px;
+  min-height: 320px;
+}
+
+.char-card {
+  flex: 1 1 0;
+  max-width: 240px;
+  text-align: center;
+  position: relative;
+  transition: transform 0.4s, opacity 0.4s, filter 0.4s;
+}
+
+/* 卡片头部：左 id-block + 右 mistake / 中心对齐 */
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 4px;
+  margin-bottom: 6px;
+}
+.card-head.center {
+  justify-content: center;
+}
+.id-block {
+  text-align: left;
+}
+.id-block.center {
+  text-align: center;
+}
+
+.char-card .name {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.char-card .role {
+  font-size: 11px;
+  color: #78909c;
+  margin-top: 1px;
+}
+
+.char-svg {
+  width: 160px;
+  height: 200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* === Character (full size for games) === */
+.ch {
+  position: absolute;
+  inset: 0;
+}
+.ch .c-hair {
+  position: absolute;
+  z-index: 3;
+}
+.ch .c-face {
+  position: absolute;
+  width: 90px;
+  height: 100px;
+  background: #ffd6bd;
+  border-radius: 48% 48% 45% 45%;
+  left: 50%;
+  top: 50px;
+  transform: translateX(-50%);
+  z-index: 4;
+}
+.ch .c-eye {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #333;
+  border-radius: 50%;
+  top: 90px;
+  z-index: 5;
+}
+.ch .c-eye.left {
+  left: calc(50% - 18px);
+}
+.ch .c-eye.right {
+  right: calc(50% - 18px);
+}
+.ch .c-mouth {
+  position: absolute;
+  width: 24px;
+  height: 12px;
+  border-bottom: 3px solid #a34c4c;
+  border-radius: 0 0 50% 50%;
+  left: 50%;
+  top: 116px;
+  transform: translateX(-50%);
+  z-index: 5;
+  transition: all 0.3s ease;
+}
+.ch .c-body {
+  position: absolute;
+  width: 110px;
+  height: 80px;
+  border-radius: 30px 30px 22px 22px;
+  left: 50%;
+  top: 145px;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+/* Eamin */
+.ch.eamin .c-hair {
+  width: 96px;
+  height: 32px;
+  background: #1a1a1a;
+  border-radius: 48px 48px 10px 10px;
+  top: 38px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.ch.eamin .c-body {
+  background: #455a64;
+}
+
+/* J */
+.ch.j .c-hair {
+  width: 124px;
+  height: 140px;
+  background: #3a2418;
+  border-radius: 62px 62px 30px 30px;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.ch.j .c-hair::before,
+.ch.j .c-hair::after {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 80px;
+  background: #3a2418;
+  bottom: -50px;
+  border-radius: 0 0 18px 18px;
+}
+.ch.j .c-hair::before {
+  left: 6px;
+}
+.ch.j .c-hair::after {
+  right: 6px;
+}
+.ch.j .c-body {
+  background: #f48fb1;
+}
+
+/* Andy */
+.ch.andy .c-hair {
+  width: 100px;
+  height: 76px;
+  background: #6e4426;
+  border-radius: 50% 50% 26px 26px;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.ch.andy .c-hair::before,
+.ch.andy .c-hair::after {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 42px;
+  background: #6e4426;
+  bottom: -14px;
+  border-radius: 0 0 14px 14px;
+}
+.ch.andy .c-hair::before {
+  left: 0;
+}
+.ch.andy .c-hair::after {
+  right: 0;
+}
+.ch.andy .c-body {
+  background: #ffb74d;
+}
+
+/* === Bubble === */
+.bubble {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%) scale(0.85);
+  background: #fff3cd;
+  color: #654c00;
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+  z-index: 20;
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background: #fff3cd;
+}
+.bubble.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-100%) scale(1);
+}
+
+/* === Animations === */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px) rotate(-2deg); }
+  75% { transform: translateX(6px) rotate(2deg); }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes wobble {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+@keyframes flash {
+  0%, 100% { filter: none; }
+  50% { filter: brightness(1.4); }
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.char-card.shake .char-svg { animation: shake 0.4s ease; }
+.char-card.bounce .char-svg { animation: bounce 0.4s ease; }
+.char-card.wobble .char-svg { animation: wobble 0.4s ease; }
+.char-card.flash .char-svg { animation: flash 0.4s ease; }
+
+/* === Result === */
+.result {
+  margin-top: 22px;
+  padding: 18px 22px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: #c0392b;
+  background: #ffe0e0;
+  border-radius: 16px;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.result.show {
+  opacity: 1;
+}
+.result .big {
+  font-size: 30px;
+  color: #a93226;
+}
+
+/* === Mobile === */
+@media (max-width: 700px) {
+  body {
+    padding: 12px;
+  }
+  .container {
+    padding: 18px;
+  }
+  .stage {
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .char-card {
+    width: 100%;
+  }
+  .char-svg {
+    width: 130px;
+    height: 170px;
+  }
+  .ch .c-face { width: 70px; height: 78px; top: 38px; }
+  .ch .c-eye { top: 70px; width: 6px; height: 6px; }
+  .ch .c-mouth { top: 92px; width: 18px; height: 9px; }
+  .ch .c-body { width: 84px; height: 60px; top: 114px; }
+  .ch.eamin .c-hair { width: 76px; height: 26px; top: 30px; }
+  .ch.j .c-hair { width: 96px; height: 110px; top: 22px; }
+  .ch.j .c-hair::before, .ch.j .c-hair::after { width: 18px; height: 62px; bottom: -38px; }
+  .ch.andy .c-hair { width: 78px; height: 60px; top: 30px; }
+  .ch.andy .c-hair::before, .ch.andy .c-hair::after { width: 18px; height: 32px; bottom: -10px; }
+}

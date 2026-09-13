@@ -1,0 +1,64 @@
+/* apology.css — 互相道歉专用样式 */
+
+.mistake {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #fff3cd;
+  color: #654c00;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 11px;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.mistake .num {
+  font-size: 16px;
+  color: #c0392b;
+  min-width: 18px;
+  text-align: center;
+  display: inline-block;
+}
+
+.mistake.pulse {
+  animation: pulse 0.3s ease;
+}
+
+.controls {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.start-btn {
+  background: #37474f;
+  color: #fff;
+  border: none;
+  padding: 12px 36px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  font-family: inherit;
+}
+.start-btn:hover:not(:disabled) {
+  background: #263238;
+}
+.start-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.start-btn:disabled {
+  background: #90a4ae;
+  cursor: not-allowed;
+}
+
+/* 结果覆盖：红色 */
+.result {
+  background: #ffe0e0;
+  color: #c0392b;
+}
+.result .big {
+  color: #a93226;
+}

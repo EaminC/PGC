@@ -4,391 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OGC · 互相道歉</title>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        padding: 24px;
-        min-height: 100vh;
-        background: linear-gradient(135deg, #eef3f8, #dfe8f0);
-        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
-          "Microsoft YaHei", sans-serif;
-        color: #37474f;
-      }
-
-      .container {
-        max-width: 1000px;
-        margin: 0 auto;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 22px;
-        padding: 28px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-      }
-
-      .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-      }
-
-      .back {
-        text-decoration: none;
-        color: #607d8b;
-        font-size: 13px;
-        padding: 6px 12px;
-        border-radius: 10px;
-        background: #eceff1;
-      }
-      .back:hover {
-        background: #cfd8dc;
-      }
-
-      h1 {
-        text-align: center;
-        margin: 0 0 4px;
-        font-size: 24px;
-      }
-
-      .subtitle {
-        text-align: center;
-        color: #78909c;
-        font-size: 13px;
-        margin-bottom: 22px;
-      }
-
-      .stage {
-        position: relative;
-        display: flex;
-        justify-content: space-around;
-        align-items: flex-start;
-        gap: 20px;
-        padding: 16px 8px 28px;
-        min-height: 360px;
-      }
-
-      .char-card {
-        flex: 1 1 0;
-        max-width: 240px;
-        text-align: center;
-        position: relative;
-        transition: transform 0.2s;
-      }
-
-      .char-card .name {
-        font-size: 16px;
-        font-weight: 700;
-        margin-bottom: 4px;
-      }
-
-      .char-card .role {
-        font-size: 11px;
-        color: #78909c;
-        margin-bottom: 8px;
-      }
-
-      .char-svg {
-        width: 160px;
-        height: 200px;
-        margin: 0 auto;
-        position: relative;
-      }
-
-      .mistake {
-        margin-top: 8px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 12px;
-        background: #fff3cd;
-        color: #654c00;
-        border-radius: 14px;
-        font-weight: 600;
-        font-size: 13px;
-      }
-
-      .mistake .num {
-        font-size: 18px;
-        color: #c0392b;
-        min-width: 18px;
-      }
-
-      /* 角色 SVG 主体 */
-      .ch {
-        position: absolute;
-        inset: 0;
-      }
-
-      .ch .c-hair {
-        position: absolute;
-        z-index: 3;
-      }
-      .ch .c-face {
-        position: absolute;
-        width: 90px;
-        height: 100px;
-        background: #ffd6bd;
-        border-radius: 48% 48% 45% 45%;
-        left: 50%;
-        top: 50px;
-        transform: translateX(-50%);
-        z-index: 4;
-      }
-      .ch .c-eye {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        background: #333;
-        border-radius: 50%;
-        top: 90px;
-        z-index: 5;
-      }
-      .ch .c-eye.left {
-        left: calc(50% - 18px);
-      }
-      .ch .c-eye.right {
-        right: calc(50% - 18px);
-      }
-      .ch .c-mouth {
-        position: absolute;
-        width: 24px;
-        height: 12px;
-        border-bottom: 3px solid #a34c4c;
-        border-radius: 0 0 50% 50%;
-        left: 50%;
-        top: 116px;
-        transform: translateX(-50%);
-        z-index: 5;
-      }
-      .ch .c-body {
-        position: absolute;
-        width: 110px;
-        height: 80px;
-        border-radius: 30px 30px 22px 22px;
-        left: 50%;
-        top: 145px;
-        transform: translateX(-50%);
-        z-index: 2;
-      }
-
-      /* Eamin */
-      .ch.eamin .c-hair {
-        width: 96px;
-        height: 32px;
-        background: #1a1a1a;
-        border-radius: 48px 48px 10px 10px;
-        top: 38px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      .ch.eamin .c-body {
-        background: #455a64;
-      }
-
-      /* J */
-      .ch.j .c-hair {
-        width: 124px;
-        height: 140px;
-        background: #3a2418;
-        border-radius: 62px 62px 30px 30px;
-        top: 28px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      .ch.j .c-hair::before,
-      .ch.j .c-hair::after {
-        content: "";
-        position: absolute;
-        width: 22px;
-        height: 80px;
-        background: #3a2418;
-        bottom: -50px;
-        border-radius: 0 0 18px 18px;
-      }
-      .ch.j .c-hair::before {
-        left: 6px;
-      }
-      .ch.j .c-hair::after {
-        right: 6px;
-      }
-      .ch.j .c-body {
-        background: #f48fb1;
-      }
-
-      /* Andy */
-      .ch.andy .c-hair {
-        width: 100px;
-        height: 76px;
-        background: #6e4426;
-        border-radius: 50% 50% 26px 26px;
-        top: 36px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      .ch.andy .c-hair::before,
-      .ch.andy .c-hair::after {
-        content: "";
-        position: absolute;
-        width: 22px;
-        height: 42px;
-        background: #6e4426;
-        bottom: -14px;
-        border-radius: 0 0 14px 14px;
-      }
-      .ch.andy .c-hair::before {
-        left: 0;
-      }
-      .ch.andy .c-hair::after {
-        right: 0;
-      }
-      .ch.andy .c-body {
-        background: #ffb74d;
-      }
-
-      /* 气泡 */
-      .bubble {
-        position: absolute;
-        top: -8px;
-        left: 50%;
-        transform: translateX(-50%) translateY(-100%) scale(0.85);
-        background: #fff3cd;
-        color: #654c00;
-        padding: 8px 12px;
-        border-radius: 14px;
-        font-size: 13px;
-        font-weight: 600;
-        white-space: nowrap;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.25s, transform 0.25s;
-        z-index: 20;
-      }
-      .bubble::after {
-        content: "";
-        position: absolute;
-        bottom: -6px;
-        left: 50%;
-        transform: translateX(-50%) rotate(45deg);
-        width: 10px;
-        height: 10px;
-        background: #fff3cd;
-      }
-      .bubble.show {
-        opacity: 1;
-        transform: translateX(-50%) translateY(-100%) scale(1);
-      }
-
-      /* 抖动 / 弹跳动画 */
-      @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-6px) rotate(-2deg); }
-        75% { transform: translateX(6px) rotate(2deg); }
-      }
-      @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-      }
-      @keyframes wobble {
-        0%, 100% { transform: rotate(0); }
-        25% { transform: rotate(-5deg); }
-        75% { transform: rotate(5deg); }
-      }
-      @keyframes flash {
-        0%, 100% { filter: none; }
-        50% { filter: brightness(1.4); }
-      }
-
-      .char-card.shake .char-svg {
-        animation: shake 0.4s ease;
-      }
-      .char-card.bounce .char-svg {
-        animation: bounce 0.4s ease;
-      }
-      .char-card.wobble .char-svg {
-        animation: wobble 0.4s ease;
-      }
-      .char-card.flash .char-svg {
-        animation: flash 0.4s ease;
-      }
-
-      .mistake.pulse {
-        animation: bounce 0.3s ease;
-      }
-
-      /* 控制区 */
-      .controls {
-        text-align: center;
-        margin-top: 8px;
-      }
-
-      .start-btn {
-        background: #37474f;
-        color: #fff;
-        border: none;
-        padding: 12px 36px;
-        font-size: 15px;
-        font-weight: 600;
-        border-radius: 14px;
-        cursor: pointer;
-        transition: background 0.2s, transform 0.1s;
-      }
-      .start-btn:hover:not(:disabled) {
-        background: #263238;
-      }
-      .start-btn:active:not(:disabled) {
-        transform: scale(0.97);
-      }
-      .start-btn:disabled {
-        background: #90a4ae;
-        cursor: not-allowed;
-      }
-
-      /* 结果 */
-      .result {
-        margin-top: 22px;
-        padding: 18px 22px;
-        text-align: center;
-        font-size: 22px;
-        font-weight: 800;
-        color: #c0392b;
-        background: #ffe0e0;
-        border-radius: 16px;
-        opacity: 0;
-        transition: opacity 0.4s;
-      }
-      .result.show {
-        opacity: 1;
-      }
-      .result .big {
-        font-size: 30px;
-        color: #a93226;
-      }
-
-      @media (max-width: 700px) {
-        body {
-          padding: 12px;
-        }
-        .container {
-          padding: 18px;
-        }
-        .stage {
-          flex-direction: column;
-          align-items: center;
-          gap: 14px;
-        }
-        .char-card {
-          width: 100%;
-        }
-        .char-svg {
-          width: 130px;
-          height: 170px;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="../assets/ogc.css" />
+    <link rel="stylesheet" href="../assets/apology.css" />
   </head>
   <body>
     <div class="container">
@@ -401,9 +18,18 @@
       <div class="subtitle">看谁是老师眼里的错的人</div>
 
       <div class="stage" id="stage">
+        <!-- Eamin -->
         <div class="char-card" data-id="eamin">
-          <div class="name">Eamin</div>
-          <div class="role">影视大头兵</div>
+          <div class="card-head">
+            <div class="id-block">
+              <div class="name">Eamin</div>
+              <div class="role">影视大头兵</div>
+            </div>
+            <div class="mistake">
+              <span>错误值</span>
+              <span class="num" data-num>0</span>
+            </div>
+          </div>
           <div class="char-svg">
             <div class="ch eamin">
               <div class="c-hair"></div>
@@ -415,12 +41,20 @@
             </div>
             <div class="bubble" data-bubble></div>
           </div>
-          <div class="mistake">老师错误值 <span class="num" data-num>0</span></div>
         </div>
 
+        <!-- J -->
         <div class="char-card" data-id="j">
-          <div class="name">J</div>
-          <div class="role">热点大头兵</div>
+          <div class="card-head">
+            <div class="id-block">
+              <div class="name">J</div>
+              <div class="role">热点大头兵</div>
+            </div>
+            <div class="mistake">
+              <span>错误值</span>
+              <span class="num" data-num>0</span>
+            </div>
+          </div>
           <div class="char-svg">
             <div class="ch j">
               <div class="c-hair"></div>
@@ -432,12 +66,20 @@
             </div>
             <div class="bubble" data-bubble></div>
           </div>
-          <div class="mistake">老师错误值 <span class="num" data-num>0</span></div>
         </div>
 
+        <!-- Andy -->
         <div class="char-card" data-id="andy">
-          <div class="name">Andy</div>
-          <div class="role">体育大头兵</div>
+          <div class="card-head">
+            <div class="id-block">
+              <div class="name">Andy</div>
+              <div class="role">体育大头兵</div>
+            </div>
+            <div class="mistake">
+              <span>错误值</span>
+              <span class="num" data-num>0</span>
+            </div>
+          </div>
           <div class="char-svg">
             <div class="ch andy">
               <div class="c-hair"></div>
@@ -449,154 +91,166 @@
             </div>
             <div class="bubble" data-bubble></div>
           </div>
-          <div class="mistake">老师错误值 <span class="num" data-num>0</span></div>
         </div>
       </div>
 
       <div class="controls">
-        <button class="start-btn" id="startBtn">开始</button>
+        <button class="start-btn" id="startBtn" type="button">开始</button>
       </div>
 
       <div class="result" id="result"></div>
     </div>
 
+    <script src="../assets/voices.js"></script>
     <script>
-      const members = ["eamin", "j", "andy"];
-      const displayNames = { eamin: "Eamin", j: "J", andy: "Andy" };
-      const apologies = {
-        eamin: "对不起，都是我的错，原谅我好吗",
-        j: "抱歉啊，我真的不应该那样做",
-        andy: "呜呜，对不起嘛，下次一定改",
-      };
+      (function () {
+        const members = ["eamin", "j", "andy"];
+        const displayNames = { eamin: "Eamin", j: "J", andy: "Andy" };
+        const apologies = {
+          eamin: "对不起，都是我的错，原谅我好吗",
+          j: "抱歉啊，我真的不应该那样做",
+          andy: "呜呜，对不起嘛，下次一定改",
+        };
 
-      const mistakes = { eamin: 0, j: 0, andy: 0 };
-      let running = false;
+        const mistakes = { eamin: 0, j: 0, andy: 0 };
+        let running = false;
 
-      const cards = {
-        eamin: document.querySelector('[data-id="eamin"]'),
-        j: document.querySelector('[data-id="j"]'),
-        andy: document.querySelector('[data-id="andy"]'),
-      };
-
-      const startBtn = document.getElementById("startBtn");
-      const resultEl = document.getElementById("result");
-
-      function getBubble(id) {
-        return cards[id].querySelector("[data-bubble]");
-      }
-
-      function setCount(id, n) {
-        cards[id].querySelector("[data-num]").textContent = n;
-        const m = cards[id].querySelector(".mistake");
-        m.classList.remove("pulse");
-        void m.offsetWidth;
-        m.classList.add("pulse");
-      }
-
-      function showBubble(id, text, durationMs) {
-        const b = getBubble(id);
-        b.textContent = text;
-        b.classList.add("show");
-        if (durationMs) {
-          setTimeout(() => b.classList.remove("show"), durationMs);
+        // 防御：如果某个 card 找不到，整个游戏都跑不起来，提示一下
+        function $(sel) {
+          const el = document.querySelector(sel);
+          if (!el) console.warn("[apology] 找不到元素:", sel);
+          return el;
         }
-      }
 
-      function hideBubble(id) {
-        getBubble(id).classList.remove("show");
-      }
+        const cards = {
+          eamin: $('[data-id="eamin"]'),
+          j: $('[data-id="j"]'),
+          andy: $('[data-id="andy"]'),
+        };
 
-      function triggerAnim(id) {
-        const card = cards[id];
-        const anims = ["shake", "bounce", "wobble", "flash"];
-        const a = anims[Math.floor(Math.random() * anims.length)];
-        card.classList.remove("shake", "bounce", "wobble", "flash");
-        void card.offsetWidth;
-        card.classList.add(a);
-      }
+        const startBtn = $("#startBtn");
+        const resultEl = $("#result");
 
-      function resetAll() {
-        members.forEach((id) => {
-          mistakes[id] = 0;
-          setCount(id, 0);
-          hideBubble(id);
-        });
-        resultEl.classList.remove("show");
-        resultEl.innerHTML = "";
-      }
-
-      function speak(text) {
-        if (!("speechSynthesis" in window)) return;
-        try {
-          speechSynthesis.cancel();
-          const u = new SpeechSynthesisUtterance(text);
-          u.lang = "zh-CN";
-          u.rate = 1.0;
-          u.pitch = 1.0;
-          speechSynthesis.speak(u);
-        } catch (e) {}
-      }
-
-      function pickRandomId() {
-        return members[Math.floor(Math.random() * members.length)];
-      }
-
-      function startGame() {
-        if (running) return;
-        running = true;
-        startBtn.disabled = true;
-        startBtn.textContent = "进行中…";
-        resetAll();
-
-        const duration = 5000;
-        const tick = 500;
-        const startTime = Date.now();
-        const handle = setInterval(() => {
-          const elapsed = Date.now() - startTime;
-          const victim = pickRandomId();
-          mistakes[victim] += 1;
-          setCount(victim, mistakes[victim]);
-          triggerAnim(victim);
-
-          if (elapsed + tick >= duration) {
-            clearInterval(handle);
-            setTimeout(playApologyPhase, 500);
-          }
-        }, tick);
-      }
-
-      function playApologyPhase() {
-        let i = 0;
-        function next() {
-          if (i >= members.length) {
-            setTimeout(showResult, 700);
-            return;
-          }
-          const id = members[i];
-          showBubble(id, "道歉中…", 2200);
-          speak(apologies[id]);
-          i++;
-          setTimeout(next, 2400);
+        function getBubble(id) {
+          return cards[id].querySelector("[data-bubble]");
         }
-        next();
-      }
 
-      function showResult() {
-        // 错的人：错误值最高的（取最高，平手取第一个）
-        const sorted = members
-          .map((id) => ({ id, n: mistakes[id] }))
-          .sort((a, b) => b.n - a.n);
-        const worst = sorted[0];
-        members.forEach((id) => hideBubble(id));
-        resultEl.innerHTML = `错的人是 <span class="big">${displayNames[worst.id]}</span>！`;
-        resultEl.classList.add("show");
-        speak(`错的人是 ${displayNames[worst.id]}`);
-        startBtn.disabled = false;
-        startBtn.textContent = "再来一次";
-        running = false;
-      }
+        function setCount(id, n) {
+          cards[id].querySelector("[data-num]").textContent = n;
+          const m = cards[id].querySelector(".mistake");
+          if (!m) return;
+          m.classList.remove("pulse");
+          void m.offsetWidth;
+          m.classList.add("pulse");
+        }
 
-      startBtn.addEventListener("click", startGame);
+        function showBubble(id, text, durationMs) {
+          const b = getBubble(id);
+          if (!b) return;
+          b.textContent = text;
+          b.classList.add("show");
+          if (durationMs) {
+            setTimeout(() => b.classList.remove("show"), durationMs);
+          }
+        }
+
+        function hideBubble(id) {
+          const b = getBubble(id);
+          if (!b) return;
+          b.classList.remove("show");
+        }
+
+        function triggerAnim(id) {
+          const card = cards[id];
+          if (!card) return;
+          const anims = ["shake", "bounce", "wobble", "flash"];
+          const a = anims[Math.floor(Math.random() * anims.length)];
+          card.classList.remove("shake", "bounce", "wobble", "flash");
+          void card.offsetWidth;
+          card.classList.add(a);
+        }
+
+        function resetAll() {
+          members.forEach((id) => {
+            mistakes[id] = 0;
+            setCount(id, 0);
+            hideBubble(id);
+          });
+          resultEl.classList.remove("show");
+          resultEl.innerHTML = "";
+        }
+
+        function speak(text, id) {
+          if (window.OGCVoice) {
+            window.OGCVoice.speak(text, id);
+          }
+        }
+
+        function pickRandomId() {
+          return members[Math.floor(Math.random() * members.length)];
+        }
+
+        function startGame() {
+          if (running) return;
+          running = true;
+          startBtn.disabled = true;
+          startBtn.textContent = "进行中…";
+          resetAll();
+
+          const duration = 5000;
+          const tick = 500;
+          const startTime = Date.now();
+          const handle = setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            const victim = pickRandomId();
+            mistakes[victim] += 1;
+            setCount(victim, mistakes[victim]);
+            triggerAnim(victim);
+
+            if (elapsed + tick >= duration) {
+              clearInterval(handle);
+              setTimeout(playApologyPhase, 500);
+            }
+          }, tick);
+        }
+
+        function playApologyPhase() {
+          let i = 0;
+          function next() {
+            if (i >= members.length) {
+              setTimeout(showResult, 700);
+              return;
+            }
+            const id = members[i];
+            showBubble(id, "道歉中…", 2200);
+            speak(apologies[id], id);
+            i++;
+            setTimeout(next, 2400);
+          }
+          next();
+        }
+
+        function showResult() {
+          const sorted = members
+            .map((id) => ({ id, n: mistakes[id] }))
+            .sort((a, b) => b.n - a.n);
+          const worst = sorted[0];
+          members.forEach((id) => hideBubble(id));
+          resultEl.innerHTML = `错的人是 <span class="big">${displayNames[worst.id]}</span>！`;
+          resultEl.classList.add("show");
+          speak(`错的人是 ${displayNames[worst.id]}`, worst.id);
+          startBtn.disabled = false;
+          startBtn.textContent = "再来一次";
+          running = false;
+        }
+
+        if (startBtn) {
+          startBtn.addEventListener("click", startGame);
+        }
+
+        // 暴露给调试
+        window.__apology = { startGame, speak };
+      })();
     </script>
   </body>
 </html>
