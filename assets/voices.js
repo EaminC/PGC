@@ -61,6 +61,8 @@
   // 提前声明：speak / processQueue 都会用到这两个状态
   const speechQueue = [];
   let speaking = false;
+  // 兜底定时器句柄：onend 失火时强制推进队列
+  let fallbackTimer = null;
 
   function loadVoices() {
     if (!("speechSynthesis" in window)) return [];
@@ -92,6 +94,7 @@
     try {
       // cancel 模式：打断一切，包括排队的指责
       window.speechSynthesis.cancel();
+      if (fallbackTimer) { clearTimeout(fallbackTimer); fallbackTimer = null; }
       speechQueue.length = 0;
       speaking = false;
 
@@ -111,10 +114,21 @@
   function processQueue() {
     if (!speechQueue.length) {
       speaking = false;
+      if (fallbackTimer) { clearTimeout(fallbackTimer); fallbackTimer = null; }
       return;
     }
     speaking = true;
     const { text, profile } = speechQueue.shift();
+
+    // 用 advanced flag 防止 onend + 兜底定时器双触发
+    let advanced = false;
+    const advance = () => {
+      if (advanced) return;
+      advanced = true;
+      if (fallbackTimer) { clearTimeout(fallbackTimer); fallbackTimer = null; }
+      setTimeout(processQueue, 40);
+    };
+
     try {
       const u = new SpeechSynthesisUtterance(String(text));
       u.lang = "zh-CN";
@@ -122,12 +136,21 @@
       u.rate = profile.rate;
       const v = pickVoice(profile.voiceHint);
       if (v) u.voice = v;
-      const advance = () => setTimeout(processQueue, 40);
+
       u.onend = advance;
       u.onerror = advance;
+
+      // 兜底定时器：onend 在某些浏览器/TTS 引擎下不触发
+      // 中文每字约 280ms / rate，加缓冲
+      const durationMs = Math.max(
+        900,
+        Math.round((text.length * 280) / profile.rate) + 500
+      );
+      fallbackTimer = setTimeout(advance, durationMs);
+
       window.speechSynthesis.speak(u);
     } catch (e) {
-      setTimeout(processQueue, 40);
+      advance();
     }
   }
 
@@ -144,6 +167,7 @@
 
   function clearSpeech() {
     speechQueue.length = 0;
+    if (fallbackTimer) { clearTimeout(fallbackTimer); fallbackTimer = null; }
     if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     speaking = false;
   }

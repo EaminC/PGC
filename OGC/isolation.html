@@ -214,11 +214,14 @@
           rollBtn.textContent = "摇骰子中…";
           // 清掉上一局残留的语音排队
           if (window.OGCVoice) window.OGCVoice.clearSpeech();
+          // 立刻触发一次 TTS：在 iOS Safari 上必须紧跟 user gesture，
+          // 否则骰子转 1.2s 后再 speak 会被静默丢弃
+          if (window.OGCVoice) window.OGCVoice.speak("摇", "eamin");
           reset();
 
           const final = 1 + Math.floor(Math.random() * 6);
           let elapsed = 0;
-          const spinDuration = 1800;
+          const spinDuration = 1200;
           const tickMs = 80;
 
           dice.classList.add("spin");
