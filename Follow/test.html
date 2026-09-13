@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>关注实验室</title>
 
+    <!-- OGC 共用样式：复用 .ch.eamin / .ch.j / .ch.andy 的角色 SVG -->
+    <link rel="stylesheet" href="../assets/ogc.css" />
+
     <style>
       * {
         box-sizing: border-box;
@@ -658,20 +661,32 @@
         display: none;
         position: fixed;
         left: 50%;
-        bottom: 30px;
+        bottom: 24px;
         transform: translateX(-50%);
-        gap: 20px;
-        padding: 16px 24px;
+        gap: 18px;
+        padding: 16px 22px 22px;
         background: rgba(255, 247, 230, 0.97);
         border: 2px solid #d96363;
         border-radius: 22px;
         box-shadow: 0 14px 40px rgba(0, 0, 0, 0.22);
         z-index: 1000;
         animation: allknow-in 0.35s ease-out;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: calc(100vw - 32px);
       }
 
       .allknow-row.show {
         display: flex;
+      }
+
+      .allknow-row .allknow-caption {
+        flex: 1 1 100%;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: #654c00;
+        margin-bottom: 2px;
       }
 
       @keyframes allknow-in {
@@ -744,6 +759,108 @@
       .allknow-row .mini-character.wangzai .body::before {
         background: #d96363;
       }
+
+      /* OGC 三人：复用 ogc.css 的色系和形状，
+         直接覆盖尺寸缩到 ~56x70（不靠 transform 缩放） */
+      .allknow-row .mini-character.ogc {
+        width: 60px;
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        position: relative;
+      }
+      .allknow-row .mini-character.ogc .char-svg {
+        width: 60px;
+        height: 70px;
+        margin: 0;
+        position: relative;
+      }
+
+      /* 通用：缩脸/眼/嘴/身 */
+      .allknow-row .mini-character.ogc .ch .c-face {
+        width: 32px;
+        height: 36px;
+        top: 16px;
+        left: 50%;
+        margin-left: -16px;
+      }
+      .allknow-row .mini-character.ogc .ch .c-eye {
+        width: 4px;
+        height: 4px;
+        top: 30px;
+      }
+      .allknow-row .mini-character.ogc .ch .c-eye.left { left: 8px; }
+      .allknow-row .mini-character.ogc .ch .c-eye.right { right: 8px; }
+      .allknow-row .mini-character.ogc .ch .c-mouth {
+        width: 14px;
+        height: 6px;
+        top: 40px;
+        left: 50%;
+        margin-left: -7px;
+      }
+      .allknow-row .mini-character.ogc .ch .c-body {
+        width: 42px;
+        height: 28px;
+        top: 50px;
+        left: 50%;
+        margin-left: -21px;
+      }
+
+      /* Eamin（短发） */
+      .allknow-row .mini-character.ogc.eamin .ch .c-hair {
+        width: 36px;
+        height: 12px;
+        top: 14px;
+        left: 50%;
+        margin-left: -18px;
+        border-radius: 18px 18px 4px 4px;
+      }
+      /* J（长发） */
+      .allknow-row .mini-character.ogc.j .ch .c-hair {
+        width: 46px;
+        height: 50px;
+        top: 8px;
+        left: 50%;
+        margin-left: -23px;
+        border-radius: 23px 23px 10px 10px;
+      }
+      .allknow-row .mini-character.ogc.j .ch .c-hair::before,
+      .allknow-row .mini-character.ogc.j .ch .c-hair::after {
+        width: 8px;
+        height: 30px;
+        background: #3a2418;
+        bottom: -18px;
+      }
+      .allknow-row .mini-character.ogc.j .ch .c-hair::before { left: 6px; }
+      .allknow-row .mini-character.ogc.j .ch .c-hair::after { right: 6px; }
+      /* Andy（中长发） */
+      .allknow-row .mini-character.ogc.andy .ch .c-hair {
+        width: 38px;
+        height: 28px;
+        top: 12px;
+        left: 50%;
+        margin-left: -19px;
+        border-radius: 19px 19px 10px 10px;
+      }
+      .allknow-row .mini-character.ogc.andy .ch .c-hair::before,
+      .allknow-row .mini-character.ogc.andy .ch .c-hair::after {
+        width: 8px;
+        height: 14px;
+        background: #6e4426;
+        bottom: -4px;
+      }
+      .allknow-row .mini-character.ogc.andy .ch .c-hair::before { left: 4px; }
+      .allknow-row .mini-character.ogc.andy .ch .c-hair::after { right: 4px; }
+
+      /* ABB 也加 ABB 名称色标签，与 OGC 一致 */
+      .allknow-row .mini-character.abb .hair { background: #25252b; }
+      .allknow-row .mini-character.abb .body,
+      .allknow-row .mini-character.abb .body::before {
+        background: #6b8fd6;
+      }
+      .allknow-row .mini-character.abb .laptop { display: none; }
 
       .allknow-row .mini-name {
         position: absolute;
@@ -1044,7 +1161,7 @@
     <div class="game">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
         <a href="../index.html" style="text-decoration:none;color:#607d8b;font-size:12px;padding:5px 10px;border-radius:10px;background:#eceff1">← 返回选人</a>
-        <span style="font-size:11px;color:#90a4ae">Follow · ABB</span>
+        <span style="font-size:11px;color:#90a4ae">Follow · ABB（POC）</span>
       </div>
 
       <h1>关注实验室</h1>
@@ -1194,9 +1311,65 @@
         </div>
       </div>
 
-      <!-- 旺仔自己的「大家都已经知道了」反应弹窗（只显示旺仔，不带 ABB） -->
+      <!-- 所有角色 popup：Eamin / J / Andy / ABB / 旺仔 全员都说「我们都知道啦」 -->
       <div id="allknowRow" class="allknow-row">
-        <div class="mini-character wangzai">
+        <div class="allknow-caption">📢 全员：我们都知道啦！</div>
+
+        <div class="mini-character ogc eamin" data-id="eamin">
+          <div class="char-svg">
+            <div class="ch eamin">
+              <div class="c-hair"></div>
+              <div class="c-face"></div>
+              <div class="c-eye left"></div>
+              <div class="c-eye right"></div>
+              <div class="c-mouth"></div>
+              <div class="c-body"></div>
+            </div>
+          </div>
+          <div class="mini-name">Eamin</div>
+        </div>
+
+        <div class="mini-character ogc j" data-id="j">
+          <div class="char-svg">
+            <div class="ch j">
+              <div class="c-hair"></div>
+              <div class="c-face"></div>
+              <div class="c-eye left"></div>
+              <div class="c-eye right"></div>
+              <div class="c-mouth"></div>
+              <div class="c-body"></div>
+            </div>
+          </div>
+          <div class="mini-name">J</div>
+        </div>
+
+        <div class="mini-character ogc andy" data-id="andy">
+          <div class="char-svg">
+            <div class="ch andy">
+              <div class="c-hair"></div>
+              <div class="c-face"></div>
+              <div class="c-eye left"></div>
+              <div class="c-eye right"></div>
+              <div class="c-mouth"></div>
+              <div class="c-body"></div>
+            </div>
+          </div>
+          <div class="mini-name">Andy</div>
+        </div>
+
+        <div class="mini-character abb" data-id="abb">
+          <div class="hair"></div>
+          <div class="face">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="mouth"></div>
+          </div>
+          <div class="body"></div>
+          <div class="laptop"></div>
+          <div class="mini-name">ABB</div>
+        </div>
+
+        <div class="mini-character wangzai" data-id="wangzai">
           <div class="hair"></div>
           <div class="face">
             <div class="eye left"></div>
@@ -2329,21 +2502,30 @@
       }
 
       function showAllKnow() {
-        // 只显示旺仔，弹出他自己表示"大家都已经知道了"
+        // 全员出场的浮窗（旺仔在主区域，但不动；浮窗里是全员 mini 立绘）
         allknowRowEl.classList.add("show");
 
+        // 旺仔在自己区域开心 + 播报员报告完成
         wangzaiElement.classList.remove("sad");
         wangzaiElement.classList.add("happy");
-        showWangzaiSpeech("大家都已经知道了！");
+        showWangzaiSpeech("我们都知道啦！");
 
-        // 只让旺仔自己说，不调动 ABB
-        setTimeout(() => {
-          if (window.OGCVoice) {
-            window.OGCVoice.speak("大家都已经知道了", "wangzai");
-          }
-        }, 200);
+        // 全员按顺序说「我们都知道啦」（每个用自己的声线）
+        // 顺序：Eamin → J → Andy → ABB → 旺仔
+        if (window.OGCVoice) {
+          window.OGCVoice.clearSpeech();
+          window.OGCVoice.queueSpeak("我们都知道啦", "eamin");
+          window.OGCVoice.queueSpeak("我们都知道啦", "j");
+          window.OGCVoice.queueSpeak("我们都知道啦", "andy");
+          window.OGCVoice.queueSpeak("我们都知道啦", "abb");
+          window.OGCVoice.queueSpeak("我们都知道啦", "wangzai");
+        }
 
-        // ~2.6s 后消失
+        // ABB 的主立绘不受影响：
+        // 他在网格里继续自己的 LT7 反应，不参与号外的"全员合唱"
+        // 这里只清掉他的 sad 表情（如果之前被重置），但不调用 happy/speakFemale
+
+        // 全员浮窗显示 ~3s 后消失（5 句串讲约 5×0.8s ≈ 4s，留余量）
         setTimeout(() => {
           allknowRowEl.classList.remove("show");
           wangzaiElement.classList.remove("happy");
@@ -2353,7 +2535,7 @@
           announceInput.disabled = false;
           announceInput.value = "";
           announceInput.focus();
-        }, 2600);
+        }, 4500);
       }
 
       // 绑定事件
