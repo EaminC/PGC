@@ -505,6 +505,7 @@
     </div>
 
     <script src="../assets/voices.js"></script>
+    <script src="../assets/swing.js"></script>
     <script>
       const PLAYERS = ["eamin", "j", "andy", "yanzhi"];
 
@@ -640,6 +641,11 @@
       function animate(playerEl, strokes) {
         return new Promise((resolve) => {
           playerEl.classList.add("swinging");
+          // 挥杆 SFX：birdie 用 hard，bogey 用 soft，其它默认
+          if (window.SwingSFX) {
+            const variant = strokes <= 3 ? "hard" : strokes >= 9 ? "soft" : null;
+            window.SwingSFX.play(variant);
+          }
           const t = Math.max(450, Math.min(900, 300 + strokes * 50));
           setTimeout(() => {
             playerEl.classList.remove("swinging");
